@@ -36,7 +36,6 @@ CREATE TABLE Comments (
   reference_id INTEGER
     REFERENCES Posts,
   created_at timestamp DEFAULT current_timestamp,
-  subject TEXT,
   body text NOT NULL
 );
 

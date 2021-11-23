@@ -23,8 +23,8 @@ class User {
     static async exists(username) {
         const check = await db.query(
             `SELECT username
-           FROM Users
-           WHERE username = $1`,
+             FROM Users
+             WHERE username = $1`,
             [username],
         );
 
@@ -43,14 +43,13 @@ class User {
     static async authenticate(username, password) {
         // try to find the user first
         const result = await db.query(
-            `SELECT id,
-                  username,
-                  password,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  email_verified as "emailVerified",
-                  is_admin AS "isAdmin"
+            `SELECT username,
+                    password,
+                    first_name AS "firstName",
+                    last_name AS "lastName",
+                    email,
+                    email_verified as "emailVerified",
+                    is_admin AS "isAdmin"
            FROM Users
            WHERE username = $1`,
             [username],
@@ -70,6 +69,7 @@ class User {
 
     }
 
+
     /** Register user with data.
      *
      * Returns { username, firstName, lastName, email, isAdmin }
@@ -81,8 +81,8 @@ class User {
         { username, password, firstName, lastName, email, isAdmin }) {
         const duplicateCheck = await db.query(
             `SELECT username
-           FROM Users
-           WHERE username = $1`,
+             FROM Users
+             WHERE username = $1`,
             [username],
         );
 
@@ -94,14 +94,14 @@ class User {
 
         const result = await db.query(
             `INSERT INTO Users
-           (username,
-            password,
-            first_name,
-            last_name,
-            email,
-            is_admin)
-           VALUES ($1, $2, $3, $4, $5, $6)
-           RETURNING id, username, first_name AS "firstName", last_name AS "lastName", email, is_admin AS "isAdmin"`,
+               (username,
+                password,
+                first_name,
+                last_name,
+                email,
+                is_admin)
+             VALUES ($1, $2, $3, $4, $5, $6)
+             RETURNING username, first_name AS "firstName", last_name AS "lastName", email, is_admin AS "isAdmin"`,
             [
                 username,
                 hashedPassword,
@@ -117,6 +117,7 @@ class User {
         return user;
     }
 
+
     /** Find all users.
      *
      * Returns [{ username, first_name, last_name, email, is_admin }, ...]
@@ -124,18 +125,18 @@ class User {
 
     static async findAll() {
         const result = await db.query(
-            `SELECT id,
-                  username,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  is_admin AS "isAdmin"
-           FROM Users
-           ORDER BY username`,
+            `SELECT username,
+                    first_name AS "firstName",
+                    last_name AS "lastName",
+                    email,
+                    is_admin AS "isAdmin"
+             FROM Users
+             ORDER BY username`,
         );
 
         return result.rows;
     }
+
 
     /** Given a username, return data about user.
      *
@@ -147,14 +148,13 @@ class User {
 
     static async get(username) {
         const userRes = await db.query(
-            `SELECT id,
-                  username,
-                  first_name AS "firstName",
-                  last_name AS "lastName",
-                  email,
-                  is_admin AS "isAdmin"
-           FROM Users
-           WHERE username = $1`,
+            `SELECT username,
+                    first_name AS "firstName",
+                    last_name AS "lastName",
+                    email,
+                    is_admin AS "isAdmin"
+             FROM Users
+             WHERE username = $1`,
             [username],
         );
 
@@ -163,12 +163,12 @@ class User {
         if (!user) throw new NotFoundError(`No user: ${username}`);
 
         const savedSearchesRes = await db.query(
-            `SELECT s.user_id AS "userId",
+            `SELECT s.username AS "username",
                     s.location_id AS "locationId",
                     s.closest_ori AS "closestORI",
                     s.comments
-           FROM Saved_Searches as s
-           WHERE s.user_id = $1`, [user.id]);
+             FROM Saved_Searches as s
+             WHERE s.username = $1`, [username]);
 
         user.searches = savedSearchesRes.rows;
         return user;
@@ -211,9 +211,9 @@ class User {
         const usernameVarIdx = "$" + (values.length + 1);
 
         const querySql = `UPDATE Users 
-                      SET ${setCols} 
-                      WHERE username = ${usernameVarIdx} 
-                      RETURNING username,
+                            SET ${setCols} 
+                            WHERE username = ${usernameVarIdx} 
+                            RETURNING username,
                                 first_name AS "firstName",
                                 last_name AS "lastName",
                                 email,
@@ -227,20 +227,22 @@ class User {
         return user;
     }
 
+
     /** Delete given user from database; returns undefined. */
 
     static async remove(username) {
         let result = await db.query(
             `DELETE
-           FROM Users
-           WHERE username = $1
-           RETURNING username`,
+             FROM Users
+             WHERE username = $1
+             RETURNING username`,
             [username],
         );
         const user = result.rows[0];
 
         if (!user) throw new NotFoundError(`No user: ${username}`);
     }
+
 
     /** Save search: update db, returns undefined.
      * 
@@ -257,7 +259,7 @@ class User {
 
         await db.query(
             `INSERT INTO Saved_Searches (username, location_id, closest_ori, comments)
-           VALUES ($1, $2, $3, $4)`,
+             VALUES ($1, $2, $3, $4)`,
             [username, locationId, closestORI, comments]);
     }
 }
