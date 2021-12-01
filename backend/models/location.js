@@ -73,10 +73,29 @@ class Location {
     }
 
 
+    /** Searches database for all locations that exist in
+     *  provided city, state.
+     * 
+     * returns an array of location objects of form
+     * [{id, lat, lng, city, state, population}, ...]
+     *  or an empty array if no matches found
+     */
+    static async findNearby(city, state) {
+        const result = await db.query(
+            `SELECT id,
+                     lat,
+                     lng,
+                     city,
+                     state,
+                     population
+             FROM Locations
+             WHERE city = $1,
+                   state = $2`,
+            [city, state]
+        );
 
-    // static async findNearby(city)
-    // static calculate distance(lat)
-
+        return result.rows;
+    }
 
 
 }

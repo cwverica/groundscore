@@ -120,7 +120,8 @@ class User {
 
     /** Find all users.
      *
-     * Returns [{ username, first_name, last_name, email, is_admin }, ...]
+     * Returns an array of user objects of form
+     * [{ username, first_name, last_name, email, is_admin }, ...]
      **/
 
     static async findAll() {
@@ -155,7 +156,7 @@ class User {
                     is_admin AS "isAdmin"
              FROM Users
              WHERE username = $1`,
-            [username],
+            [username]
         );
 
         const user = userRes.rows[0];
@@ -168,7 +169,9 @@ class User {
                     s.closest_ori AS "closestORI",
                     s.comments
              FROM Saved_Searches as s
-             WHERE s.username = $1`, [username]);
+             WHERE s.username = $1`,
+            [username]
+        );
 
         user.searches = savedSearchesRes.rows;
         return user;
