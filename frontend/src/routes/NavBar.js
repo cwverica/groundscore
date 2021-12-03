@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
+import Dropdown from 'react-bootstrap/Dropdown';
 import UserContext from "../auth/UserContext";
 import './Navbar.css';
 
@@ -13,58 +14,36 @@ function Navbar({ logout }) {
 
     function loggedInNav() {
         return (
-            <ul className="navbar-nav ml-auto">
-                <li className="nav-item mr-4">
-                    <NavLink className="nav-link" to="/">
-                        Link title here
-                    </NavLink>
-                </li>
-                <li className="nav-item mr-4">
-                    <NavLink className="nav-link" to="/">
-                        Link title here
-                    </NavLink>
-                </li>
-                <li className="nav-item mr-4">
-                    <NavLink className="nav-link" to="/">
-                        Link title here
-                    </NavLink>
-                </li>
-                <li className="nav-item">
-                    <Link className="nav-link" to="/" onClick={logout}>
-                        Log out {currentUser.first_name || currentUser.username}
-                    </Link>
-                </li>
-            </ul>
+            <Dropdown drop="start">
+                <Dropdown.Toggle variant="info" id="dropdown-basic">
+                    Your Stuff
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item href="#/mysearches">Saved Searches</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item href="/profile">View Profile</Dropdown.Item>
+                    <Dropdown.Item href="#/profile/edit">Edit Profile</Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
+
+                </Dropdown.Menu>
+            </Dropdown>
         );
     }
 
     function loggedOutNav() {
         return (
-            <ul className="navbar-nav ml-auto">
-                <li className="nav-item mr-4">
-                    <NavLink className="nav-link" to="/">
-                        Link title here
-                    </NavLink>
-                </li><li className="nav-item mr-4">
-                    <NavLink className="nav-link" to="/">
-                        Link title here
-                    </NavLink>
-                </li><li className="nav-item mr-4">
-                    <NavLink className="nav-link" to="/">
-                        Link title here
-                    </NavLink>
-                </li>
-                <li className="nav-item mr-4">
-                    <NavLink className="nav-link" to="/login">
-                        Login
-                    </NavLink>
-                </li>
-                <li className="nav-item mr-4">
-                    <NavLink className="nav-link" to="/signup">
-                        Sign Up
-                    </NavLink>
-                </li>
-            </ul>
+            <Dropdown drop="start">
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    Register
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item href="/login">Login</Dropdown.Item>
+                    <Dropdown.Item href="/signup">Signup</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
         );
     }
 
@@ -73,7 +52,10 @@ function Navbar({ logout }) {
             <Link className="navbar-brand" to="/">
                 GroundScore
             </Link>
-            {currentUser ? loggedInNav() : loggedOutNav()}
+
+            <div className="user-button">
+                {currentUser ? loggedInNav() : loggedOutNav()}
+            </div>
         </nav>
     );
 }

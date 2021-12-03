@@ -17,7 +17,7 @@ function AppRoutes({ login, signup }) {
                 <Route exact path="/login" element={<LoginForm login={login} />} />
                 <Route exact path="/signup" element={<SignupForm signup={signup} />} />
                 <Route exact path="/profile" element={<ProtectedRoute />} >
-                    <Route exact path="profile" element={<ProfileForm />} />
+                    <Route exact path="/profile" element={<ProfileForm />} />
                 </Route>
                 {/* <Navigate to="/" />    Figure out reactV6 way of catchall/redirect */}
             </Routes>

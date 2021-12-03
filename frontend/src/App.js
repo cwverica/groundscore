@@ -55,9 +55,9 @@ function App() {
       // let token = await JoblyApi.signup(signupData);
       // do signup stuff here
       // setToken(token);
-      window.alert(`You have signed up with:\n\t
-                      username: ${username}\n\t
-                      name: ${firstName} ${lastName}\n\t
+      window.alert(`You have signed up with:\n
+                      username: ${username}\n
+                      name: ${firstName} ${lastName}\n
                       password: ${'*' * password.length}
                       email: ${email}`)
       return { success: true };
