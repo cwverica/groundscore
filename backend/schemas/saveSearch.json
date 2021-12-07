@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://our.company.com/saveSearch.schema.json",
+  "type": "object",
+  "properties": {
+    "closestORI": {
+      "type": "string",
+      "minLength": 9,
+      "maxLength": 9
+    },
+    "locationId": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "comments": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "locationId",
+    "closestORI"
+  ]
+}

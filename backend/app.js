@@ -8,7 +8,7 @@ const cors = require("cors");
 const { NotFoundError } = require("./expressError");
 
 const { authenticateJWT } = require("./middleware/auth");
-// const authRoutes = require("./routes/auth");
+const authRoutes = require("./routes/auth");
 
 const morgan = require("morgan");
 
@@ -20,7 +20,7 @@ app.use(morgan("tiny"));
 app.use(authenticateJWT);
 
 // will us differente routes, as such:
-// app.use("/auth", authRoutes);
+app.use("/auth", authRoutes);
 
 
 

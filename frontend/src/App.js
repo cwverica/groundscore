@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
+import GroundScoreApi from './api/gs-api';
 import UserContext from './auth/UserContext';
 import useLocalStorage from './customHooks/useLocalStorage';
 import NavBar from './routes/NavBar';
@@ -33,7 +34,7 @@ function App() {
    */
   async function login(loginData) {
     try {
-      // let token = await JoblyApi.login(loginData);
+      let token = await GroundScoreApi.login(loginData);
       // do login stuff here
       setToken(token);
       return { success: true };
@@ -52,14 +53,14 @@ function App() {
   async function signup(signupData) {
     const { username, password, firstName, lastName, email } = signupData;
     try {
-      // let token = await JoblyApi.signup(signupData);
+      let token = await GroundScoreApi.signup(signupData);
       // do signup stuff here
-      // setToken(token);
-      window.alert(`You have signed up with:\n
-                      username: ${username}\n
-                      name: ${firstName} ${lastName}\n
-                      password: ${'*' * password.length}
-                      email: ${email}`)
+      setToken(token);
+      // window.alert(`You have signed up with:\n
+      //                 username: ${username}\n
+      //                 name: ${firstName} ${lastName}\n
+      //                 password: ${'*' * password.length}
+      //                 email: ${email}`)
       return { success: true };
     } catch (errors) {
       console.error("Signup failed:", errors);

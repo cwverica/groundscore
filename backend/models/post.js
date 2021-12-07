@@ -10,17 +10,43 @@ const {
 
 class Post {
 
+
+    /** Searches for a post by supplied postId.
+     *  Returns {id, username, locationId, createdAt, subject, body}
+     */
+
+    static async get(postId) {
+        const result = await db.query(
+            `SELECT id,
+                    username,
+                    location_id AS "locationId,
+                    created_at AS "createdAt",
+                    subject,
+                    body
+             FROM Posts
+             WHERE id = $1`,
+            [postId]
+        );
+
+        const post = result.rows[0];
+
+        if (!post) throw new NotFoundError(`No post with id: ${id}`);
+
+        return post;
+    }
+
+
     /** Searches by a supplied username, return all matching posts 
      *  [{id, username, locationId, createdAt, subject, body}, ...]
      * Assumes username exists in database, please verify first.
     */
 
-    static async findByUser(username) {
+    static async getByUser(username) {
         const result = await db.query(
             `SELECT id,
                     username,
                     location_id as "locationId",
-                    created_at as "createdA"',
+                    created_at as "createdAt",
                     subject,
                     body
              FROM Posts
@@ -36,9 +62,11 @@ class Post {
 
     /** Takes a locationId, returns all posts related to that location.
      *  [{id, username, locationId, createdAt, subject, body}, ...]
+     * 
+     * assumes locationId exists, please verify
      */
 
-    static async findByLocation(locationId) {
+    static async getByLocation(locationId) {
         const result = await db.query(
             `SELECT id,
                     username,
@@ -72,7 +100,7 @@ class Post {
      * Returns the newly created Post object.
      */
 
-    static async createPost(username, locationId, body, subject = null) {
+    static async create({ username, locationId, body, subject = null }) {
 
         const result = await db.query(
             `INSERT INTO Posts
@@ -110,13 +138,24 @@ class Post {
      * Data can include:
      *   { body, subject }
      *
-     * Returns { username, locationId, body, subject}
+     * Returns { postId, username, locationId, createdAt, subject, body}
      *
      * Throws NotFoundError if not found.
      *
      */
 
-    static async updatePost(id, data) {
+    static async update({ id, data, username }) {
+
+        const check = await db.query(
+            `SELECT id,
+                    username
+             FROM Posts
+             WHERE id = $1`,
+            [id],
+        );
+
+        if (check.rows[0].username !== username) throw new UnauthorizedError(`Unauthorized to update`)
+
 
         const { setCols, values } = sqlForPartialUpdate(data, {});
         const postIdVarIdx = "$" + (values.length + 1);
@@ -141,7 +180,7 @@ class Post {
 
     /** Given a post id, deletes that post and returns undefined */
 
-    static async deletePost(id) {
+    static async remove(id) {
         let result = await db.query(
             `DELETE
              FROM Posts

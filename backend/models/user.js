@@ -140,11 +140,15 @@ class User {
 
 
     /** Given a username, return data about user.
-     *
-     * Returns { username, first_name, last_name, is_admin, searches }
-     *   where searches is { userId, locationId, closestORI, comments }
+     * 
+     * Returns { username, first_name, last_name, is_admin, searches, posts, comments }
+     *   where searches is [{ searchId, locationId, closestORI, comments }, ...]
+     *        and posts is [{ postId, locationId, createdAt, subject (optional), body}, ...]
+     *     and comments is [{ commentId, referenceId, createdAt, body}, ...]
      *
      * Throws NotFoundError if user not found.
+     * 
+     * TODO: Should this endpoint return all of this, or just user data
      **/
 
     static async get(username) {
@@ -158,13 +162,12 @@ class User {
              WHERE username = $1`,
             [username]
         );
-
         const user = userRes.rows[0];
 
         if (!user) throw new NotFoundError(`No user: ${username}`);
 
         const savedSearchesRes = await db.query(
-            `SELECT s.username AS "username",
+            `SELECT s.id as "searchId",
                     s.location_id AS "locationId",
                     s.closest_ori AS "closestORI",
                     s.comments
@@ -172,8 +175,30 @@ class User {
              WHERE s.username = $1`,
             [username]
         );
-
         user.searches = savedSearchesRes.rows;
+
+        const postsRes = await db.query(
+            `SELECT p.id as "postId",
+                    p.location_id as "locationId",
+                    p.created_at as "createdAt",
+                    p.subject,
+                    p.body
+             FROM Posts as p
+             WHERE p.username = $1`,
+            [username]);
+        user.posts = postsRes.rows;
+
+        const commentsRes = await db.query(
+            `SELECT c.id as "postId",
+                    c.reference_id as "referenceId",
+                    c.created_at as "createdAt",
+                    c.body
+             FROM Comments as c
+             WHERE c.username = $1`,
+            [username]
+        );
+        user.comments = commentsRes.rows;
+
         return user;
     }
 
@@ -184,7 +209,7 @@ class User {
      * all the fields; this only changes provided ones.
      *
      * Data can include:
-     *   { username, firstName, lastName, password, email, isAdmin }
+     *   { username, firstName, lastName, password, email }
      *
      * Returns { id, username, firstName, lastName, email, isAdmin }
      *
@@ -208,7 +233,6 @@ class User {
             {
                 firstName: "first_name",
                 lastName: "last_name",
-                isAdmin: "is_admin",
                 emailVerified: "email_verified"
             });
         const usernameVarIdx = "$" + (values.length + 1);
@@ -247,23 +271,49 @@ class User {
     }
 
 
-    /** Save search: update db, returns undefined.
+    /** Save search: creates a new saved_search
+     *   username, { locationId, closestORI, comments } => {search id}.
      * 
-     *  Be sure to verify that locationId and closestORI exist.
-     *  This fuction assumes that all parameters are valid and exist in
-     *  the database.
+     *  Be sure to verify that username exists
      *
      * - username: username that is saving the search
      * - locationId: the id of the location
      * - closestORI: ORI of the closest reporting agency
+     * - comments: users comments about search results. (optional)
      **/
 
-    static async saveSearch(username, locationId, closestORI, comments = '') {
+    static async saveSearch(username, data) {
 
-        await db.query(
+        const { locationId, closestORI } = data;
+        const comments = data.comments || '';
+
+        let result = await db.query(
+            `SELECT id
+             FROM Locations
+             WHERE id = $1`,
+            [locationId],
+        );
+        const location = result.rows[0];
+
+        if (!location) throw new NotFoundError(`No location found with id: ${locationId}`);
+
+        result = await db.query(
+            `SELECT ORI
+             FROM Reporting_Agencies
+             WHERE ORI = $1`,
+            [closestORI],
+        );
+        const ORI = result.rows[0];
+
+        if (!ORI) throw new NotFoundError(`No agency found with ORI: ${closestORI}`)
+
+        let save = await db.query(
             `INSERT INTO Saved_Searches (username, location_id, closest_ori, comments)
-             VALUES ($1, $2, $3, $4)`,
+             VALUES ($1, $2, $3, $4)
+             RETURNING id`,
             [username, locationId, closestORI, comments]);
+
+        return save.results[0];
     }
 }
 

@@ -1,3 +1,5 @@
+CREATE SEQUENCE IF NOT EXISTS reference_id;
+
 CREATE TABLE Users (
   username VARCHAR UNIQUE NOT NULL,
   password TEXT NOT NULL,
@@ -14,12 +16,11 @@ CREATE TABLE Locations (
   lat float8 NOT NULL,
   lng float8 NOT NULL,
   city TEXT,
-  state CHAR(2),
-  population INTEGER
+  state CHAR(2)
 );
 
 CREATE TABLE Posts (
-  id SERIAL PRIMARY KEY,
+  id BIGINT DEFAULT nextval('reference_id') PRIMARY KEY,
   username INTEGER
     REFERENCES Users,
   location_id INTEGER
@@ -30,26 +31,29 @@ CREATE TABLE Posts (
 );
 
 CREATE TABLE Comments (
-  id SERIAL PRIMARY KEY,
+  id BIGINT DEFAULT nextval('reference_id') PRIMARY KEY,
   username INTEGER
     REFERENCES Users,
-  reference_id INTEGER
+  post_reference_id INTEGER
     REFERENCES Posts,
+  comment_reference_id INTEGER
+    REFERENCES Comments,
   created_at timestamp DEFAULT current_timestamp,
   body text NOT NULL
 );
 
-CREATE TABLE Reporting_Agency (
+CREATE TABLE Reporting_Agencies (
   ORI CHAR(9) UNIQUE PRIMARY KEY,
   Name TEXT NOT NULL,
   lat float8 NOT NULL,
   lng float8 NOT NULL,
+  city TEXT,
   state CHAR(2) NOT NULL
 );
 
 CREATE TABLE Crimes (
   ORI CHAR(9) NOT NULL
-    REFERENCES Reporting_Agency,
+    REFERENCES Reporting_Agencies,
   record_year INTEGER NOT NULL,
   offense TEXT NOT NULL,
   actual_cases INTEGER NOT NULL,
@@ -57,12 +61,13 @@ CREATE TABLE Crimes (
 );
 
 CREATE TABLE Saved_Searches (
+  id SERIAL PRIMARY KEY,
   username INTEGER
     REFERENCES Users,
   location_id INTEGER
     REFERENCES Locations,
   closest_ori TEXT
-    REFERENCES Reporting_Agency,
+    REFERENCES Reporting_Agencies,
   comments TEXT
 );
 
