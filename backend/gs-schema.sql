@@ -19,6 +19,7 @@ CREATE TABLE Locations (
   state CHAR(2)
 );
 
+-- Consider changing username to author/owner
 CREATE TABLE Posts (
   id BIGINT DEFAULT nextval('reference_id') PRIMARY KEY,
   username INTEGER
@@ -35,9 +36,9 @@ CREATE TABLE Comments (
   username INTEGER
     REFERENCES Users,
   post_reference_id INTEGER
-    REFERENCES Posts,
+    REFERENCES Posts ON DELETE CASCADE,
   comment_reference_id INTEGER
-    REFERENCES Comments,
+    REFERENCES Comments ON DELETE CASCADE,
   created_at timestamp DEFAULT current_timestamp,
   body text NOT NULL
 );
@@ -68,6 +69,8 @@ CREATE TABLE Saved_Searches (
     REFERENCES Locations,
   closest_ori TEXT
     REFERENCES Reporting_Agencies,
-  comments TEXT
+  created_at timestamp DEFAULT current_timestamp,
+  title TEXT,
+  user_comments TEXT
 );
 

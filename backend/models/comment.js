@@ -11,30 +11,31 @@ const {
 class Comment {
 
     /** Verify that comment exists in database
-     * commentId => {exists: boolean}
+     * id => {exists: boolean}
      */
 
-    static async verifyExists(commentId) {
+    static async verifyExists(id) {
 
         const result = await db.query(
             `SELECT id
              FROM Comments
              WHERE id = $1`,
-            [commentId],
+            [id],
         );
         const comment = result.rows[0];
 
-        return { "exists": comment ? true : false };
-    }
+        return { exists: !comment ? false : true };
+    };
 
-    /** Searches by supplied commentId
+
+    /** Searches by supplied id
      * returns single comment.
      * 
-     * commentId => { id, username, postReferenceId, commentReferenceId,
+     * id => { id, username, postReferenceId, commentReferenceId,
      *                   createdAt, body}
      */
 
-    static async getOne(commentId) {
+    static async getOne(id) {
 
         const result = await db.query(
             `SELECT id,
@@ -45,12 +46,12 @@ class Comment {
                     body
              FROM Comments
              WHERE id = $1`,
-            [commentId]
+            [id]
         );
         const comment = result.rows[0];
 
         return comment;
-    }
+    };
 
 
     /** Searches by a supplied username, return all matching comments 
@@ -73,7 +74,7 @@ class Comment {
         );
 
         return result.rows;
-    }
+    };
 
 
     /** Takes a referenceId, returns all comments related to that post.
@@ -82,37 +83,46 @@ class Comment {
      *  where comments is also 
      *      [ { id, username, postReferenceId, commentReferenceId, 
      *          createdAt, subject, body, comments }, ...] or null
-     *   (recursive)
+     *   Calls to 3 levels deep. 
+     *   On third level, comments = {more: boolean}
      * 
      *  assumes referenceId exists, please verify
      */
 
-    static async getAllByReference(referenceId, type) {
+    static async getAllByReference(referenceId, refType, callNum = 1) {
 
-        if (type !== "comment" || "post") throw new BadRequestError(`Invalid type:
-                ${type} \nType must either be "comment" or "post"`);
 
-        const otherType = type === "comment" ? "post" : "comment";
+        if (refType !== "comment" || "post") throw new BadRequestError(`Invalid refType:
+                ${refType} \nType must either be "comment" or "post"`);
+
+        const otherRefType = refType === "comment" ? "post" : "comment";
 
         const commentResult = await db.query(
             `SELECT id,
                     username,
                     created_at as "createdAt",
-                    ${otherType}_reference_id as ${otherType}ReferenceId",
-                    ${type}_reference_id as ${type}ReferenceId",
+                    ${otherRefType}_reference_id as ${otherRefType}ReferenceId",
+                    ${refType}_reference_id as ${refType}ReferenceId",
                     body
              FROM Comments
-             WHERE ${type}_reference_id = $1`,
+             WHERE ${refType}_reference_id = $1`,
             [referenceId]
         );
         const supComments = commentResult.rows;
 
-        if (supComments.length) {
-            supComments.map((comment) => {
-                const comments = await Comment.findByReference(comment.id, "comment");
-                comment.comments = comments;
-            });
-        };
+
+        if (callNum >= 4) {
+            supComments.comments = { more: (supComments.length ? true : false) };
+        } else {
+            if (supComments.length) {
+                supComments.map((comment) => {
+                    const comments = await Comment.findByReference(comment.id, "comment", (callNum + 1));
+                    comment.comments = comments;
+                });
+            } else {
+                supComments = { more: false }
+            };
+        }
         return supComments;
     };
 
@@ -137,7 +147,7 @@ class Comment {
             RETURNING id,
                       username, 
                       post_reference_id AS "postReferenceId", 
-                      comment_reference_id AS "commenttReferenceId", 
+                      comment_reference_id AS "commentReferenceId", 
                       created_at AS "createdAt", 
                       body`,
             [
@@ -151,7 +161,7 @@ class Comment {
         const newComment = result.rows[0];
 
         return newComment;
-    }
+    };
 
 
     /** Updates a comments body
@@ -163,39 +173,29 @@ class Comment {
 
     static async update({ id, body, username }) {
 
-        const check = await db.query(
-            `SELECT id,
-                    username
-             FROM Comments
-             WHERE id = $1`,
-            [id],
-        );
-
-        if (check.rows[0].username !== username) throw new UnauthorizedError(`Unauthorized to change`)
-
         const result = await db.query(
             `UPDATE Comments 
              SET body = $1
-             WHERE id = $2
+             WHERE id = $2,
+             AND   username = $3
              RETURNING id,
                   username, 
                   reference_id AS "referenceId", 
                   created_at AS "createdAt", 
                   body`,
-            [body, id]
+            [body, id, username]
         );
 
         const comment = result.rows[0];
 
-        if (!comment) throw new NotFoundError(`No comment with id: ${id}`);
+        if (!comment) throw new NotFoundError(`No comment with id: ${id} from user ${username}`);
         return comment;
-    }
-
+    };
 
 
     /** Given a comment id, deletes that comment and returns undefined */
 
-    static async remove(id) {
+    static async delete(id) {
         let result = await db.query(
             `DELETE
              FROM Comments
@@ -206,8 +206,10 @@ class Comment {
         const comment = result.rows[0];
 
         if (!comment) throw new NotFoundError(`No comment with id: ${id}`);
+    };
 
-    }
+
+};
 
 
-}
+module.exports = Comment;

@@ -1,7 +1,6 @@
 "use strict";
 
 const db = require("../db");
-const { sqlForPartialUpdate } = require("../helpers/sql");
 const {
     NotFoundError,
     BadRequestError,
@@ -11,10 +10,36 @@ const {
 class Location {
 
 
+    /** Get object by id
+     *  Takes a location Id, 
+     * returns location object:
+     *  { id, lat, lng, city, state }  
+     */
+
+    static async get(id) {
+
+        const result = await db.query(
+            `SELECT id,
+                    lat,
+                    lng,
+                    city,
+                    state
+             FROM Locations
+             WHERE id = $1`,
+            [id]
+        );
+
+        const location = result.rows[0];
+
+        if (!location) throw new NotFoundError(`No location found with id: ${id}`);
+
+        return location;
+    };
+
     /** 
      *  Searches through locations by latitude and longitude
      * 
-     * returns matching location or undefined
+     * returns matching location's Id or undefined
      */
     static async findId(latLngObj) {
 
@@ -22,30 +47,29 @@ class Location {
 
         const result = await db.query(
             `SELECT id
-                    FROM Locations
-                    WHERE lat = $1,
-                        lng = $2`,
+             FROM Locations
+             WHERE lat = $1
+             AND lng = $2`,
             [lat, lng],
         );
 
         const id = result.rows[0];
 
         return id;
-    }
+    };
 
 
     /** Creates a new location out of:
      *  -a latLngObj 
      *  -city 
-     *  -state (2 character abbreviation) 
-     *  -population (positive integer)
+     *  -state (2 character abbreviation)
      * 
      * Location object is { lat, lng, }
      * 
      *  Returns newly created location object 
      */
 
-    static async createLocation(latLngObj, city, state, population) {
+    static async createLocation({ latLngObj, city, state }) {
 
         const { lat, lng } = latLngObj;
 
@@ -54,23 +78,21 @@ class Location {
                    (lat,
                     lng,
                     city,
-                    state, 
-                    population)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING id, lat, lng, city, state, population`,
+                    state)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id, lat, lng, city, state`,
             [
                 lat,
                 lng,
                 city,
-                state,
-                population
+                state
             ]
         );
 
         const location = result.rows[0];
 
         return location;
-    }
+    };
 
 
     /** Searches database for all locations that exist in
@@ -80,22 +102,22 @@ class Location {
      * [{id, lat, lng, city, state, population}, ...]
      *  or an empty array if no matches found
      */
-    static async findNearby(city, state) {
+    static async findNearby({ city, state }) {
         const result = await db.query(
             `SELECT id,
                      lat,
                      lng,
                      city,
-                     state,
-                     population
+                     state
              FROM Locations
-             WHERE city = $1,
-                   state = $2`,
+             WHERE city = $1
+             AND state = $2`,
             [city, state]
         );
 
         return result.rows;
-    }
+    };
+};
 
 
-}
+module.exports = Location;

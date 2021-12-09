@@ -116,30 +116,8 @@ router.patch("/:username", ensureCorrectUserOrAdmin, async function (req, res, n
 
 router.delete("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
-        await User.remove(req.params.username);
+        await User.delete(req.params.username);
         return res.json({ deleted: req.params.username });
-    } catch (err) {
-        return next(err);
-    }
-});
-
-
-/** POST /[username]/saveSearch  { locationId, closestORI, comments } => 
- *
- * Returns {"saved": searchId}
- *
- * Authorization required: admin or same-user-as-:username
- * */
-
-router.post("/:username/saveSearch", ensureCorrectUserOrAdmin, async function (req, res, next) {
-    try {
-        const validator = jsonschema.validate(req.body, saveSearchSchema);
-        if (!validator.valid) {
-            const errs = validator.errors.map(e => e.stack);
-            throw new BadRequestError(errs);
-        }
-        const searchId = await User.saveSearch(req.params.username, req.body);
-        return res.json({ saved: searchId });
     } catch (err) {
         return next(err);
     }

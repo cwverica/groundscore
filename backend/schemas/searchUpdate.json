@@ -1,16 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://our.company.com/postUpdate.schema.json",
+  "$id": "http://our.company.com/searchUpdate.schema.json",
   "type": "object",
   "properties": {
     "id": {
       "type": "integer"
     },
-    "subject": {
+    "title": {
       "type": "string",
-      "maxLength": 80
+      "maxLength": 50
     },
-    "body": {
+    "userComments": {
       "type": "string",
       "minLength": 1
     }

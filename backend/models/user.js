@@ -257,7 +257,7 @@ class User {
 
     /** Delete given user from database; returns undefined. */
 
-    static async remove(username) {
+    static async delete(username) {
         let result = await db.query(
             `DELETE
              FROM Users
@@ -268,52 +268,6 @@ class User {
         const user = result.rows[0];
 
         if (!user) throw new NotFoundError(`No user: ${username}`);
-    }
-
-
-    /** Save search: creates a new saved_search
-     *   username, { locationId, closestORI, comments } => {search id}.
-     * 
-     *  Be sure to verify that username exists
-     *
-     * - username: username that is saving the search
-     * - locationId: the id of the location
-     * - closestORI: ORI of the closest reporting agency
-     * - comments: users comments about search results. (optional)
-     **/
-
-    static async saveSearch(username, data) {
-
-        const { locationId, closestORI } = data;
-        const comments = data.comments || '';
-
-        let result = await db.query(
-            `SELECT id
-             FROM Locations
-             WHERE id = $1`,
-            [locationId],
-        );
-        const location = result.rows[0];
-
-        if (!location) throw new NotFoundError(`No location found with id: ${locationId}`);
-
-        result = await db.query(
-            `SELECT ORI
-             FROM Reporting_Agencies
-             WHERE ORI = $1`,
-            [closestORI],
-        );
-        const ORI = result.rows[0];
-
-        if (!ORI) throw new NotFoundError(`No agency found with ORI: ${closestORI}`)
-
-        let save = await db.query(
-            `INSERT INTO Saved_Searches (username, location_id, closest_ori, comments)
-             VALUES ($1, $2, $3, $4)
-             RETURNING id`,
-            [username, locationId, closestORI, comments]);
-
-        return save.results[0];
     }
 }
 

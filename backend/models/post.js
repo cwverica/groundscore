@@ -33,7 +33,7 @@ class Post {
         if (!post) throw new NotFoundError(`No post with id: ${id}`);
 
         return post;
-    }
+    };
 
 
     /** Searches by a supplied username, return all matching posts 
@@ -57,7 +57,7 @@ class Post {
         const postList = result.rows;
 
         return postList;
-    }
+    };
 
 
     /** Takes a locationId, returns all posts related to that location.
@@ -82,7 +82,7 @@ class Post {
         const postList = result.rows;
 
         return postList;
-    }
+    };
 
 
     //TODO:
@@ -126,8 +126,7 @@ class Post {
         const newPost = result.rows[0];
 
         return newPost;
-
-    }
+    };
 
 
     /** Updates a post with 'data'
@@ -146,41 +145,32 @@ class Post {
 
     static async update({ id, data, username }) {
 
-        const check = await db.query(
-            `SELECT id,
-                    username
-             FROM Posts
-             WHERE id = $1`,
-            [id],
-        );
-
-        if (check.rows[0].username !== username) throw new UnauthorizedError(`Unauthorized to update`)
-
-
         const { setCols, values } = sqlForPartialUpdate(data, {});
-        const postIdVarIdx = "$" + (values.length + 1);
+        const idVarIdx = "$" + (values.length + 1);
+        const userVarIdx = "$" + (values.length + 2)
 
         const querySql = `UPDATE Posts 
                       SET ${setCols} 
-                      WHERE id = ${postIdVarIdx} 
+                      WHERE id = ${idVarIdx} 
+                      AND username = $${userVarIdx}
                       RETURNING id,
                                 username, 
                                 location_id AS "locationId", 
                                 created_at AS "createdAt", 
                                 subject, 
                                 body`;
-        const result = await db.query(querySql, [...values, id]);
+        const result = await db.query(querySql, [...values, id, username]);
         const post = result.rows[0];
 
-        if (!post) throw new NotFoundError(`No post with id: ${id}`);
+        if (!post) throw new NotFoundError(`No post with id: ${id} from user: ${username}`);
 
         return post;
-    }
+    };
 
 
-    /** Given a post id, deletes that post and returns undefined */
+    /** Given an id, deletes that post and returns undefined */
 
-    static async remove(id) {
+    static async delete(id) {
         let result = await db.query(
             `DELETE
              FROM Posts
@@ -192,7 +182,10 @@ class Post {
 
         if (!post) throw new NotFoundError(`No post with id: ${id}`);
 
-    }
+    };
+
+    // TODO: Idea: Let a user "delete" a post (remove their name and body) to keep comments in tact
+    //       or let an Admin *actually* delete a post, cascading down
 
 
 }

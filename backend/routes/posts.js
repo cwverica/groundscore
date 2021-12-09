@@ -13,16 +13,17 @@ const postUpdateSchema = require("../schemas/postUpdate.json");
 
 const router = express.Router();
 
+
 /** GET /[locationId] =>  {post}
  *   
- *  Takes a postId
+ *  Takes a id
  *  Returns a post 
  *      where post is { id, username, locationId, createdAt, subject, body }
  */
 
-router.get("/:postId", async function (req, res, next) {
+router.get("/:id", async function (req, res, next) {
     try {
-        const posts = await Post.get(req.params.postId);
+        const posts = await Post.get(req.params.id);
         return res.json({ post });
     } catch (err) {
         return next(err);
@@ -30,13 +31,13 @@ router.get("/:postId", async function (req, res, next) {
 });
 
 
-/** GET /location/[locationId] =>  [{post}, ...]
+/** GET /bylocation/[locationId] =>  [{post}, ...]
  *   
  *  Returns an array of posts referencing the locationId provided
  *      where post is { id, username, locationId, createdAt, subject, body }
  */
 
-router.get("/location/:locationId", async function (req, res, next) {
+router.get("/bylocation/:locationId", async function (req, res, next) {
     try {
         const posts = await Post.getByLocation(req.params.locationId);
         return res.json({ posts });
@@ -46,13 +47,13 @@ router.get("/location/:locationId", async function (req, res, next) {
 });
 
 
-/** GET /user/[username] => [{post}, ...]
+/** GET /byuser/[username] => [{post}, ...]
  *  
  * Returns an array of posts created by the user provided
  *      where post is { id, username, locationId, createdAt, subject, body }
  */
 
-router.get("/user/:username", async function (req, res, next) {
+router.get("/byuser/:username", async function (req, res, next) {
     try {
         const posts = await Post.getByUser(req.params.username);
         return res.json({ posts });
@@ -90,9 +91,10 @@ router.post("/:username", ensureCorrectUserOrAdmin, async function (res, req, ne
 /** PATCH /[username] {updateData} => { post }  
  * This accepts partial updates, you do not need to include everything only 
  * including the id is a requirement. Data can also include subject and/or body
- *   { id (required), subject (optional), body (optional) }
+ *   updateData is: { id , data }
+ *      where data is: { subject (optional), body (optional) }
  *
- * Returns { postId, username, locationId, createdAt, subject, body }
+ * Returns { id, username, locationId, createdAt, subject, body }
  *
  * Authorization required: admin or same-user-as-:username
  **/
@@ -113,15 +115,15 @@ router.patch("/:username", ensureCorrectUserOrAdmin, async function (req, res, n
 });
 
 
-/** DELETE /[postId]  =>  { deleted: postId }
+/** DELETE /[id]  =>  { deleted: id }
  *
  * Authorization required: admin 
  **/
 
-router.delete("/:postId", ensureAdmin, async function (req, res, next) {
+router.delete("/:id", ensureAdmin, async function (req, res, next) {
     try {
-        await Post.remove(req.params.postId);
-        return res.json({ deleted: req.params.postId });
+        await Post.delete(req.params.id);
+        return res.json({ deleted: req.params.id });
     } catch (err) {
         return next(err);
     }

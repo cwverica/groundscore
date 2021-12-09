@@ -1,8 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://our.company.com/saveSearch.schema.json",
+  "$id": "http://our.company.com/searchNew.schema.json",
   "type": "object",
   "properties": {
+    "title": {
+      "type": "string",
+      "maxLength": 50
+    },
     "closestORI": {
       "type": "string",
       "minLength": 9,
@@ -12,7 +16,7 @@
       "type": "integer",
       "minimum": 0
     },
-    "comments": {
+    "userComments": {
       "type": "string"
     }
   },

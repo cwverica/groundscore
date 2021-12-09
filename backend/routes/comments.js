@@ -15,16 +15,16 @@ const commentUpdateSchema = require("../schemas/commentUpdate.json");
 const router = express.Router();
 
 
-/** GET /[commentId] => { comment }
+/** GET /[id] => { comment }
  * 
  *  Retrieves a singular comment 
  *    returns { id, username, postReferenceId, commentReferenceId,
  *                  createdAt, body }
  */
 
-router.get("/:commentId", async function (res, req, next) {
+router.get("/:id", async function (res, req, next) {
     try {
-        const comment = await Comment.getOne(req.params.commentId);
+        const comment = await Comment.getOne(req.params.id);
         return res.status(201).json({ comment });
     } catch (err) {
         return next(err);
@@ -32,24 +32,22 @@ router.get("/:commentId", async function (res, req, next) {
 });
 
 
-/** GET /[type]/[commentId]/all => { comment } 
+/** GET /all/[type]/[id] => { comment } 
  * 
- * Takes a commentId and type (either "post" or "comment") and returns the 
- * comment and all children and all of their children, ... etc (recursively)
+ * Takes a id and type (either "post" or "comment") and returns the 
+ * comment and all children to three levels
  *    returns {comment} as { id, username, postReferenceId, commentReferenceId,
  *                  createdAt, body, comments }
  *    comments is [ {comment}, {comment}, ...] or null
  * 
- *  NOTE: If database becomes to large, this method will have to be
- *  redone, as this is not performant on a large scale.
 */
 
-router.get("/:type/:commentId/all", async function (res, req, next) {
+router.get("/all/:type/:id", async function (res, req, next) {
     if (req.params.type !== "post" || "comment") return next(new BadRequestError(`Invalid type:
         ${type} \nType must either be "comment" or "post"`));
 
     try {
-        const comment = await Comment.getAllByReference(req.params.commentId, req.params.type);
+        const comment = await Comment.getAllByReference(req.params.id, req.params.type);
         return comment;
     } catch (err) {
         return next(err);
@@ -81,7 +79,7 @@ router.post("/:username", ensureCorrectUserOrAdmin, async function (res, req, ne
 });
 
 
-/** PATCH /[username] { id, body } => { comment } 
+/** PATCH /[username] { id, textBody } => { comment } 
  * 
  *  Updates a comment. Only the body of a comment can be changed, 
  *      so the data will be the id for reference and the body
@@ -104,16 +102,19 @@ router.patch("/:username", ensureCorrectUserOrAdmin, async function (res, req, n
 });
 
 
-/** DELETE /[commentId]  =>  { deleted: commentId }
+/** DELETE /[id]  =>  { deleted: id }
  *
  * Authorization required: admin 
  **/
 
-router.delete("/:commentId", ensureAdmin, async function (req, res, next) {
+router.delete("/:id", ensureAdmin, async function (req, res, next) {
     try {
-        await Comment.remove(req.params.commentId);
-        return res.json({ deleted: req.params.commentId });
+        await Comment.delete(req.params.id);
+        return res.json({ deleted: req.params.id });
     } catch (err) {
         return next(err);
     }
 });
+
+
+module.exports = router;
