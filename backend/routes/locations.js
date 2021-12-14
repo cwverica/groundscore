@@ -21,7 +21,7 @@ const router = express.Router();
 router.get("/:id", async function (req, res, next) {
     try {
         const location = await Location.get(req.params.id);
-        return location;
+        return res.json({ location });
     } catch (err) {
         return next(err);
     }
@@ -33,7 +33,7 @@ router.get("/:id", async function (req, res, next) {
 router.post("/findId", async function (req, res, next) {
     try {
         const location = await Location.findId(req.body);
-        return location;
+        return res.json({ location });
     } catch (err) {
         return next(err);
     }
@@ -49,7 +49,7 @@ router.post("/findId", async function (req, res, next) {
 router.post("/findNearby", async function (req, res, next) {
     try {
         const locations = await Location.findNearby(req.body);
-        return locations;
+        return res.json({ locations });
     } catch (err) {
         return next(err);
     }
@@ -73,7 +73,7 @@ router.post("/", async function (req, res, next) {
             throw new BadRequestError(errs);
         }
         const location = await Location.create(req.body);
-        return location;
+        return res.status(201).json({ location });
     } catch (err) {
         return next(err);
     }

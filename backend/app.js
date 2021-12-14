@@ -9,6 +9,12 @@ const { NotFoundError } = require("./expressError");
 
 const { authenticateJWT } = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
+const commentRoutes = require("./routes/comments");
+const crimeRoutes = require("./routes/crimes");
+const locationRoutes = require("./routes/locations");
+const postRoutes = require("./routes/posts");
+const searchRoutes = require("./routes/searches");
+const userRoutes = require("./routes/users");
 
 const morgan = require("morgan");
 
@@ -21,12 +27,18 @@ app.use(authenticateJWT);
 
 // will us differente routes, as such:
 app.use("/auth", authRoutes);
+app.use("/comments", commentRoutes);
+app.use("/crimes", crimeRoutes);
+app.use("/locations", locationRoutes);
+app.use("/posts", postsRoutes);
+app.use("/searches", searchRoutes);
+app.use("/users", userRoutes);
 
 
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
-    return next(new NotFoundError());
+    return next(new NotFoundError(`Route not found`));
 });
 
 /** Generic error handler; anything unhandled goes here. */

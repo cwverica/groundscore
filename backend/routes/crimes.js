@@ -25,7 +25,7 @@ router.get("/:ORI/:recordYear", async function (req, res, next) {
     try {
         const { ORI, recordYear } = req.params;
         const records = await Crime.get(ORI, recordYear);
-        return records;
+        return res.json({ records });
     } catch (err) {
         return next(err);
     }
@@ -50,7 +50,7 @@ router.post("/", async function (req, res, next) {
             throw new BadRequestError(errs);
         }
         const outcome = Crime.save(req.body);
-        return outcome.saved ? true : false;
+        return res.json({ success: outcome.saved ? true : false });
     } catch (err) {
         return next(err);
     }

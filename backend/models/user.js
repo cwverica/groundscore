@@ -79,14 +79,8 @@ class User {
 
     static async register(
         { username, password, firstName, lastName, email, isAdmin }) {
-        const duplicateCheck = await db.query(
-            `SELECT username
-             FROM Users
-             WHERE username = $1`,
-            [username],
-        );
 
-        if (duplicateCheck.rows[0]) {
+        if (this.exists(username)) {
             throw new BadRequestError(`Duplicate username: ${username}`);
         }
 
@@ -141,14 +135,17 @@ class User {
 
     /** Given a username, return data about user.
      * 
-     * Returns { username, first_name, last_name, is_admin, searches, posts, comments }
-     *   where searches is [{ searchId, locationId, closestORI, comments }, ...]
-     *        and posts is [{ postId, locationId, createdAt, subject (optional), body}, ...]
-     *     and comments is [{ commentId, referenceId, createdAt, body}, ...]
+     * Returns { username, first_name, last_name, is_admin }
      *
      * Throws NotFoundError if user not found.
      * 
-     * TODO: Should this endpoint return all of this, or just user data
+     * TODO: Should this endpoint return all of this, or just user data?
+     *   Right now, returns just user data, and all other pieces can be found
+     *   on appropriate classes
+     *  unused calls adds onto user: {..., searches, posts, comments}
+     * where searches is [{ searchId, locationId, closestORI, comments }, ...]
+     *        and posts is [{ postId, locationId, createdAt, subject (optional), body}, ...]
+     *     and comments is [{ commentId, referenceId, createdAt, body}, ...]
      **/
 
     static async get(username) {
@@ -166,38 +163,38 @@ class User {
 
         if (!user) throw new NotFoundError(`No user: ${username}`);
 
-        const savedSearchesRes = await db.query(
-            `SELECT s.id as "searchId",
-                    s.location_id AS "locationId",
-                    s.closest_ori AS "closestORI",
-                    s.comments
-             FROM Saved_Searches as s
-             WHERE s.username = $1`,
-            [username]
-        );
-        user.searches = savedSearchesRes.rows;
+        // const savedSearchesRes = await db.query(
+        //     `SELECT s.id as "searchId",
+        //             s.location_id AS "locationId",
+        //             s.closest_ori AS "closestORI",
+        //             s.comments
+        //      FROM Saved_Searches as s
+        //      WHERE s.username = $1`,
+        //     [username]
+        // );
+        // user.searches = savedSearchesRes.rows;
 
-        const postsRes = await db.query(
-            `SELECT p.id as "postId",
-                    p.location_id as "locationId",
-                    p.created_at as "createdAt",
-                    p.subject,
-                    p.body
-             FROM Posts as p
-             WHERE p.username = $1`,
-            [username]);
-        user.posts = postsRes.rows;
+        // const postsRes = await db.query(
+        //     `SELECT p.id as "postId",
+        //             p.location_id as "locationId",
+        //             p.created_at as "createdAt",
+        //             p.subject,
+        //             p.body
+        //      FROM Posts as p
+        //      WHERE p.username = $1`,
+        //     [username]);
+        // user.posts = postsRes.rows;
 
-        const commentsRes = await db.query(
-            `SELECT c.id as "postId",
-                    c.reference_id as "referenceId",
-                    c.created_at as "createdAt",
-                    c.body
-             FROM Comments as c
-             WHERE c.username = $1`,
-            [username]
-        );
-        user.comments = commentsRes.rows;
+        // const commentsRes = await db.query(
+        //     `SELECT c.id as "postId",
+        //             c.reference_id as "referenceId",
+        //             c.created_at as "createdAt",
+        //             c.body
+        //      FROM Comments as c
+        //      WHERE c.username = $1`,
+        //     [username]
+        // );
+        // user.comments = commentsRes.rows;
 
         return user;
     }

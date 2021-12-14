@@ -21,7 +21,7 @@ const router = express.Router();
 router.get("/:id", async function (req, res, next) {
     try {
         const search = Search.get(id);
-        return search;
+        return res.json({ search });
     } catch (err) {
         return next(err);
     }
@@ -36,10 +36,10 @@ router.get("/:id", async function (req, res, next) {
  * Authorization required: admin or same-user-as-:username
  */
 
-router.get("/byUser/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.get("/byuser/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
         const searches = Search.getAllByUser(req.params.username);
-        return searches;
+        return res.json({ searches });
     } catch (err) {
         return next(err);
     }

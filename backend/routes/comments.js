@@ -25,7 +25,24 @@ const router = express.Router();
 router.get("/:id", async function (res, req, next) {
     try {
         const comment = await Comment.getOne(req.params.id);
-        return res.status(201).json({ comment });
+        return res.json({ comment });
+    } catch (err) {
+        return next(err);
+    }
+});
+
+
+/** GET /byuser/[username] => [{ comment }, ...]
+ * 
+ *  Retrieves an array, all of the comments by given user
+ *    returns [{ id, username, postReferenceId, commentReferenceId,
+ *                  createdAt, body }, ...]
+ */
+
+router.get("/byuser/:username", ensureCorrectUserOrAdmin, async function (res, req, next) {
+    try {
+        const comments = await Comment.getAllByUser(req.params.username);
+        return res.json({ comments });
     } catch (err) {
         return next(err);
     }
@@ -47,8 +64,8 @@ router.get("/all/:type/:id", async function (res, req, next) {
         ${type} \nType must either be "comment" or "post"`));
 
     try {
-        const comment = await Comment.getAllByReference(req.params.id, req.params.type);
-        return comment;
+        const comments = await Comment.getAllByReference(req.params.id, req.params.type);
+        return res.json({ comments });
     } catch (err) {
         return next(err);
     }
@@ -96,6 +113,7 @@ router.patch("/:username", ensureCorrectUserOrAdmin, async function (res, req, n
         }
         req.body.username = req.params.username;
         const comment = await Comment.update(req.body);
+        return res.json({ comment })
     } catch (err) {
         return next(err);
     }
