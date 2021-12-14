@@ -117,6 +117,7 @@ router.patch("/:username", ensureCorrectUserOrAdmin, async function (req, res, n
 
 /** DELETE /[id]  =>  { deleted: id }
  *
+ * Does not actually delete. removes data from post, but leaves it to leave comments in tact.
  * Authorization required: admin 
  **/
 

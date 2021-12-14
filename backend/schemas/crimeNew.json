@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://our.company.com/crimeNew.schema.json",
+  "type": "object",
+  "properties": {
+    "ORI": {
+      "type": "string",
+      "maxLength": 9,
+      "minLength": 9
+    },
+    "recordYear": {
+      "type": "integer",
+      "minimum": 1950,
+      "maximum": 2021
+    },
+    "offense": {
+      "type": "string",
+      "enum": [
+        "aggravated-assault",
+        "arson",
+        "burglary",
+        "homicide",
+        "human-trafficing",
+        "larcey",
+        "motor-vehicle-theft",
+        "property-crime",
+        "rape",
+        "rape-legacy",
+        "robbery",
+        "violent-crime"
+      ]
+    },
+    "actualCases": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "clearedCases": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "ORI",
+    "recordYear",
+    "offense",
+    "actualCases",
+    "clearedCases"
+  ]
+}

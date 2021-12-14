@@ -67,7 +67,7 @@ class Search {
 
 
     /** Save search: creates a new saved_search
-     *   username, { title, locationId, closestORI, userComments } => { id, title}.
+     *   { username, title, locationId, closestORI, userComments } => { id, title}.
      * 
      *  Be sure to verify that username exists
      *
@@ -78,10 +78,7 @@ class Search {
      * - userComments: users comments about search results. (optional)
      **/
 
-    static async save(username, data) {
-
-        const { title, locationId, closestORI } = data;
-        const userComments = data.userComments || '';
+    static async save({ title, locationId, closestORI, username, userComments = '' }) {
 
         let result = await db.query(
             `SELECT id

@@ -168,13 +168,17 @@ class Post {
     };
 
 
-    /** Given an id, deletes that post and returns undefined */
+    /** 
+     * Does not actually delete a post. 
+     * Given an id, updates the username, subject, and body to "(deleted)" */
 
     static async delete(id) {
         let result = await db.query(
-            `DELETE
-             FROM Posts
-             WHERE id = $1
+            `UPDATE Posts
+            SET "subject"="(deleted)",
+                "body"="(deleted)",
+                "username"="(deleted)" 
+            WHERE id = $1
              RETURNING id`,
             [id],
         );
@@ -184,8 +188,7 @@ class Post {
 
     };
 
-    // TODO: Idea: Let a user "delete" a post (remove their name and body) to keep comments in tact
-    //       or let an Admin *actually* delete a post, cascading down
+
 
 
 }

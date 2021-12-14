@@ -60,7 +60,8 @@ router.post("/:username", ensureCorrectUserOrAdmin, async function (req, res, ne
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs);
         }
-        const search = await Search.save(req.params.username, req.body);
+        req.body.username = req.params.username;
+        const search = await Search.save(req.body);
         return res.status(201).json({ "saved": search.id, "title": search.title });
     } catch (err) {
         return next(err);
