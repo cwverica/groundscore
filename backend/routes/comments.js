@@ -11,8 +11,8 @@ const Comment = require("../models/comment");
 const commentNewSchema = require("../schemas/commentNew.json");
 const commentUpdateSchema = require("../schemas/commentUpdate.json");
 
-
 const router = express.Router();
+
 
 
 /** GET /[id] => { comment }

@@ -15,7 +15,7 @@ const userUpdateSchema = require("../schemas/userUpdate.json");
 const router = express.Router();
 
 
-/** POST / { user }  => { user, token }
+/** POST /users/ { user }  => { user, token }
  *
  * Adds a new user. This is not the registration endpoint --- instead, this is
  * only for admin users to add new users. The new user being added can be an
@@ -44,7 +44,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 });
 
 
-/** GET / => { users: [ {username, firstName, lastName, email }, ... ] }
+/** GET /users/ => { users: [ {username, firstName, lastName, email }, ... ] }
  *
  * Returns list of all users.
  *
@@ -61,12 +61,9 @@ router.get("/", ensureAdmin, async function (req, res, next) {
 });
 
 
-/** GET /[username] => { user }
+/** GET /users/[username] => { user }
  *
- * Returns { username, firstName, lastName, isAdmin, searches, posts, comments }
- *   where searches is [{ searchId, locationId, closestORI, comments }, ...]
- *        and posts is [{ postId, locationId, createdAt, subject (optional), body}, ...]
- *     and comments is [{ commentId, referenceId, createdAt, body}, ...]
+ * Returns { username, firstName, lastName, isAdmin }
  *
  * Authorization required: admin or same user-as-:username
  **/
@@ -81,7 +78,7 @@ router.get("/:username", ensureCorrectUserOrAdmin, async function (req, res, nex
 });
 
 
-/** PATCH /[username] { user } => { user }
+/** PATCH /users/[username] { user } => { user }
  *
  * This accepts partial updates, you do not need to include everything
  * Data can include:
@@ -108,7 +105,7 @@ router.patch("/:username", ensureCorrectUserOrAdmin, async function (req, res, n
 });
 
 
-/** DELETE /[username]  =>  { deleted: username }
+/** DELETE /users/[username]  =>  { deleted: username }
  *
  * Authorization required: admin or same-user-as-:username
  **/

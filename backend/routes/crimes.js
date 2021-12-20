@@ -5,7 +5,6 @@
 const jsonschema = require("jsonschema");
 
 const express = require("express");
-const { ensureCorrectUserOrAdmin, ensureAdmin } = require("../middleware/auth");
 const { BadRequestError } = require("../expressError");
 const Crime = require("../models/crime");
 const crimeNewSchema = require("../schemas/crimeNew.json");

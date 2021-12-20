@@ -115,7 +115,7 @@ class Comment {
             supComments.comments = { more: (supComments.length ? true : false) };
         } else {
             if (supComments.length) {
-                supComments.map((comment) => {
+                supComments.map(async (comment) => {
                     const comments = await Comment.findByReference(comment.id, "comment", (callNum + 1));
                     comment.comments = comments;
                 });

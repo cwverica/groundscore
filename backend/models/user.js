@@ -80,9 +80,15 @@ class User {
     static async register(
         { username, password, firstName, lastName, email, isAdmin }) {
 
-        if (this.exists(username)) {
-            throw new BadRequestError(`Duplicate username: ${username}`);
-        }
+        const check = await db.query(
+            `SELECT username
+                 FROM Users
+                 WHERE username = $1`,
+            [username],
+        );
+
+        if (check.rows[0]) throw new BadRequestError(`Duplicate username: ${username}`);
+
 
         const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 

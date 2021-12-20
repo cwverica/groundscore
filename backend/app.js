@@ -30,7 +30,7 @@ app.use("/auth", authRoutes);
 app.use("/comments", commentRoutes);
 app.use("/crimes", crimeRoutes);
 app.use("/locations", locationRoutes);
-app.use("/posts", postsRoutes);
+app.use("/posts", postRoutes);
 app.use("/searches", searchRoutes);
 app.use("/users", userRoutes);
 

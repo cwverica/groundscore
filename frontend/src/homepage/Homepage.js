@@ -11,15 +11,16 @@ function Homepage() {
         <div className="Homepage">
             <div className="container text-center">
                 <h1 className="mb-4 font-weight-bold">GroundScore</h1>
-                <p className="lead">What is like when you're there?</p>
+                <p className="lead">What's it like when you're there?</p>
                 {currentUser
-                    ? <div>
-                        <h2>
-                            Welcome Back, {currentUser.firstName || currentUser.username}!
-                        </h2>
-                        <br />
-                        Let's search some neighborhoods!
-                    </div>
+                    ? (
+                        <div className="greetings">
+                            <h2>
+                                Welcome Back, {currentUser.firstName || currentUser.username}!
+                            </h2>
+                            <br />
+                        </div>
+                    )
                     : (
                         <p>
                             <Link className="btn btn-primary font-weight-bold mr-3"
@@ -32,8 +33,9 @@ function Homepage() {
                             </Link>
                         </p>
                     )}
+                <a className="button" href="/search">Let's search some neighborhoods!</a>
             </div>
-        </div>
+        </div >
     );
 }
 

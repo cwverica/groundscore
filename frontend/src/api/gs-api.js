@@ -12,7 +12,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 class GroundScoreApi {
 
-    static token;
+    static token;  // the token for interacting with the API will be stored here.
 
     static async request(endpoint, data = {}, method = "get") {
         console.debug("API Call:", endpoint, data, method);
@@ -33,7 +33,10 @@ class GroundScoreApi {
         }
     }
 
-    // Individual API routes
+    //////// Individual API routes
+
+
+    // User related routes
 
 
     /** Get token for login from username and password. */
@@ -47,7 +50,10 @@ class GroundScoreApi {
 
     static async signup(data) {
         let res = await this.request(`auth/register`, data, "post");
-        return res.token;
+        console.log(res);
+        const token = res.token
+        const username = res.username
+        return token;
     }
 
     /** Save user profile page. */
@@ -65,6 +71,7 @@ class GroundScoreApi {
     }
 
     /** Authenticate user */
+
     static async authenticateUser(username, password) {
         let res = await this.request('auth/token', { username, password }, "post");
         if (res.token) {
@@ -73,6 +80,22 @@ class GroundScoreApi {
             return { success: false, err: res.unauth };
         }
     }
+
+
+    // Location related routes
+
+
+    // Search related routes
+
+
+    // Post related routes
+
+
+    // Comment related routes
+
+
+    // Crime related routes
+
 
 
 

@@ -27,7 +27,7 @@ function LoginForm({ login }) {
         evt.preventDefault();
         let result = await login(formData);
         if (result.success) {
-            navigate("/homepage");  // TODO: eventually redirect to profile
+            navigate("/");  // TODO: eventually redirect to profile
         } else {
             setFormErrors(result.errors);
         }

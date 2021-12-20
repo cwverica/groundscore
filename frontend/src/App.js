@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import jwt from "jsonwebtoken";
 
 import GroundScoreApi from './api/gs-api';
 import UserContext from './auth/UserContext';
@@ -15,6 +16,7 @@ export const TOKEN_STORAGE_ID = 'groundscore-token';
 
 function App() {
 
+  const [infoLoaded, setInfoLoaded] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useLocalStorage(TOKEN_STORAGE_ID);
 
@@ -51,7 +53,7 @@ function App() {
   * async with boolean return, await response before proceeding
   */
   async function signup(signupData) {
-    const { username, password, firstName, lastName, email } = signupData;
+    // const { username, password, firstName, lastName, email } = signupData;
     try {
       let token = await GroundScoreApi.signup(signupData);
       // do signup stuff here
@@ -59,7 +61,7 @@ function App() {
       // window.alert(`You have signed up with:\n
       //                 username: ${username}\n
       //                 name: ${firstName} ${lastName}\n
-      //                 password: ${'*' * password.length}
+      //                 password: ${'***********'}
       //                 email: ${email}`)
       return { success: true };
     } catch (errors) {
@@ -83,6 +85,29 @@ function App() {
     // else return searches
   }
 
+  useEffect(function loadUserInfo() {
+
+    async function getCurrentUser() {
+      if (token) {
+        try {
+          let { username } = jwt.decode(token);
+          GroundScoreApi.token = token;
+          let currentUser = await GroundScoreApi.getCurrentUser(username);
+          setCurrentUser(currentUser);
+          // setApplicationIds(new Set(currentUser.applications));
+        } catch (err) {
+          console.error("Couldn't log in: ", err);
+          setCurrentUser(null);
+        }
+      }
+      setInfoLoaded(true);
+    }
+
+    setInfoLoaded(false);
+    getCurrentUser();
+  }, [token]);
+
+  if (!infoLoaded) return <div>Loading...</div>
 
   return (
     <BrowserRouter>

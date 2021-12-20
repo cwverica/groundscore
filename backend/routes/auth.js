@@ -6,11 +6,13 @@ const jsonschema = require("jsonschema");
 
 const User = require("../models/user");
 const express = require("express");
-const router = new express.Router();
 const { createToken } = require("../helpers/tokens");
 const userAuthSchema = require("../schemas/userAuth.json");
 const userRegisterSchema = require("../schemas/userRegister.json");
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, UnauthorizedError } = require("../expressError");
+
+const router = new express.Router();
+
 
 /** POST /auth/token:  { username, password } => { token }
  *
@@ -30,7 +32,7 @@ router.post("/token", async function (req, res, next) {
         const { username, password } = req.body;
         const user = await User.authenticate(username, password);
         if (user.failed) {
-            const unauth = new Error("Invalid password");
+            const unauth = new UnauthorizedError("Invalid password");
             return res.json({ unauth });
         }
         const token = createToken(user);

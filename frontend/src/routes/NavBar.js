@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import UserContext from "../auth/UserContext";
 import './Navbar.css';
@@ -10,7 +10,13 @@ import './Navbar.css';
 */
 
 function Navbar({ logout }) {
+    const navigate = useNavigate();
     const { currentUser } = useContext(UserContext);
+
+    function handleLogout() {
+        logout();
+        navigate("/");
+    }
 
     function loggedInNav() {
         return (
@@ -25,7 +31,7 @@ function Navbar({ logout }) {
                     <Dropdown.Item href="/profile">View Profile</Dropdown.Item>
                     <Dropdown.Item href="#/profile/edit">Edit Profile</Dropdown.Item>
                     <Dropdown.Divider />
-                    <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
+                    <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
 
                 </Dropdown.Menu>
             </Dropdown>

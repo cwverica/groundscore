@@ -1,8 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Alert from "../common/Alert";
-import GroundscoreApi from "../api/gs-api";
-import UserContext from "../auth/UserContext";
 import GroundScoreApi from "../api/gs-api";
+import UserContext from "../auth/UserContext";
 
 /** Profile editing form.
  * Allows a user to edit their info, is verified by entering password.
@@ -21,8 +20,8 @@ function ProfileForm() {
 
     /** On form submit:
      * verify password:
-     *  - if correct, save, show success
-     *  - if incorrect, show error
+     *  - if correct, save, show success (working)
+     *  - if incorrect, show error (not working)
      */
     async function handleSubmit(evt) {
         evt.preventDefault();
@@ -37,15 +36,12 @@ function ProfileForm() {
         let updatedUser;
 
         try {
-            let verify = await GroundScoreApi.authenticateUser(username, formData.password)
-            if (verify.success) {
-                updatedUser = await GroundScoreApi.saveProfile(username, profileData);
-            } else {
-                throw new Error(verify.err)
-            }
-        } catch (errors) {
-            // debugger;
-            setFormErrors(errors);
+            let verify = await GroundScoreApi.authenticateUser(username, formData.password);
+            console.log(verify.success, verify.err.message);
+            if (!verify.success) throw new Error(verify.err.message)
+            updatedUser = await GroundScoreApi.saveProfile(username, profileData);
+        } catch (err) {
+            setFormErrors(err);
             return;
         }
 
@@ -66,6 +62,11 @@ function ProfileForm() {
         }));
         setFormErrors([]);
     }
+
+    // Does not pass along unauthorized error message. Maybe a useEffect
+    // useEffect(function formHandler() {
+    //     
+    // }, [formErrors])
 
     return (
         <div className="col-md-6 col-lg-4 offset-md-3 offset-lg-4">

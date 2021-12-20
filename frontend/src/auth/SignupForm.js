@@ -8,6 +8,7 @@ import Alert from "../common/Alert";
  */
 
 function SignupForm({ signup }) {
+
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: "",
@@ -21,14 +22,14 @@ function SignupForm({ signup }) {
 
     /** Handle form submit:
      *
-     * Calls login, if successful, redirect to /companies.
+     * Calls login, if successful, redirect to /home.
      */
 
     async function handleSubmit(evt) {
         evt.preventDefault();
         let result = await signup(formData);
         if (result.success) {
-            navigate("/profile");
+            navigate("/home");
         } else {
             setFormErrors(result.errors);
         }

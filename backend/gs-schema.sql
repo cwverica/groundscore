@@ -1,7 +1,7 @@
 CREATE SEQUENCE IF NOT EXISTS reference_id;
 
 CREATE TABLE Users (
-  username VARCHAR UNIQUE NOT NULL,
+  username VARCHAR PRIMARY KEY,
   password TEXT NOT NULL,
   first_name TEXT,
   last_name TEXT,
@@ -22,7 +22,7 @@ CREATE TABLE Locations (
 -- Consider changing username to author/owner
 CREATE TABLE Posts (
   id BIGINT DEFAULT nextval('reference_id') PRIMARY KEY,
-  username INTEGER
+  username VARCHAR
     REFERENCES Users,
   location_id INTEGER
     REFERENCES Locations,
@@ -33,7 +33,7 @@ CREATE TABLE Posts (
 
 CREATE TABLE Comments (
   id BIGINT DEFAULT nextval('reference_id') PRIMARY KEY,
-  username INTEGER
+  username VARCHAR
     REFERENCES Users,
   post_reference_id INTEGER
     REFERENCES Posts ON DELETE CASCADE,
@@ -63,7 +63,7 @@ CREATE TABLE Crimes (
 
 CREATE TABLE Saved_Searches (
   id SERIAL PRIMARY KEY,
-  username INTEGER
+  username VARCHAR
     REFERENCES Users,
   location_id INTEGER
     REFERENCES Locations,
