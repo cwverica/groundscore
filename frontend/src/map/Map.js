@@ -10,8 +10,8 @@ import {
     // InfoWindow,
 } from "@react-google-maps/api";
 import usePlacesAutocomplete, {
-    // getGeocode,
-    // getLatLng,
+    getGeocode,
+    getLatLng,
 } from "use-places-autocomplete";
 import {
     Combobox,
@@ -20,6 +20,7 @@ import {
     ComboboxList,
     ComboboxOption
 } from "@reach/combobox";
+import "@reach/combobox/styles.css";
 
 import { GOOG_API } from "../keys";
 import styles from "./mapStyles";
@@ -40,30 +41,41 @@ const options = {
 
 
 function Search() {
-    const miles250InMeters = 402336;
+    const kilometers200InMeters = 200 * 1000;
 
     const {
         ready,
         value,
-        suggestions: { status, data },
+        suggestions,
         setValue,
-        clearSuggestions,
+        clearSuggestion,
     } = usePlacesAutocomplete({
         requestOptions: {
             location: {
                 lat: () => 37.090000,
                 lng: () => -95.712900,
-                radius: miles250InMeters
+                radius: kilometers200InMeters
             }
         }
     }); // TODO: update to user lat/lng from browser
+
+    console.log(JSON.stringify(suggestions))
+    const { data, status } = suggestions;
 
     console.log(`ready: ${ready}, val: ${value}, \nstatus: ${status}, data: ${data}`)
     // TODO: not getting any status or data
 
     return (
         <div className="searchBox">
-            <Combobox onSelect={(address) => {
+            <Combobox onSelect={async (address) => {
+                try {
+                    const results = await getGeocode({ address });
+                    clearSuggestion();
+                    console.log(`result: ${results[0]}`)
+
+                } catch (err) {
+                    console.log(`error!: ${err}`);
+                }
                 console.log(address);
             }}>
                 <ComboboxInput
@@ -75,11 +87,13 @@ function Search() {
                     placeholder="Enter an address"
                 />
                 <ComboboxPopover>
-                    {status === "OK" && data.map(({ id, description }) => (
-                        <ComboboxOption key={id} value={description} />
-                    ))}
-                    {status === "ZERO_RESULTS" && "No results found"}
-                    {status === "NOT_FOUND" && "Does not exist (according to google)"}
+                    <ComboboxList>
+                        {status === "OK" && data.map(({ id, description }) => (
+                            <ComboboxOption key={id} value={description} />
+                        ))}
+                        {status === "ZERO_RESULTS" && "No results found"}
+                        {status === "NOT_FOUND" && "Does not exist (according to google)"}
+                    </ComboboxList>
                 </ComboboxPopover>
             </Combobox>
         </div>
