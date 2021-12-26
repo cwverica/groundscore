@@ -86,6 +86,11 @@ class GroundScoreApi {
 
     // Search related routes
 
+    static async getUserSearches(username) {
+        let res = await this.request(`searches/byuser/${username}`);
+        return res.searches;
+    }
+
 
     // Post related routes
 

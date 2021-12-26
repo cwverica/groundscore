@@ -19,6 +19,8 @@ function App() {
   const [infoLoaded, setInfoLoaded] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useLocalStorage(TOKEN_STORAGE_ID);
+  const [searches, setSearches] = useState([]);
+
 
   /** A function used in development to test things, once useless, delete */
   function popup(data) {
@@ -56,7 +58,6 @@ function App() {
     // const { username, password, firstName, lastName, email } = signupData;
     try {
       let token = await GroundScoreApi.signup(signupData);
-      // do signup stuff here
       setToken(token);
       // window.alert(`You have signed up with:\n
       //                 username: ${username}\n
@@ -79,10 +80,18 @@ function App() {
 
 
   /** Finds saved searches for logged in user */
-  async function savedSearches() {
-    // if not logged in:
-    return false;
-    // else return searches
+  async function savedSearches(user) {
+    if (!token) return false;
+    const username = user.username;
+    try {
+      const searches = await GroundScoreApi.getUserSearches(username);
+      console.log("From searches");
+      popup(searches);
+      return searches;
+    } catch (err) {
+      console.log(`Error fetching searchings: ${err}`);
+      return err;
+    }
   }
 
   useEffect(function loadUserInfo() {
@@ -94,7 +103,7 @@ function App() {
           GroundScoreApi.token = token;
           let currentUser = await GroundScoreApi.getCurrentUser(username);
           setCurrentUser(currentUser);
-          // setApplicationIds(new Set(currentUser.applications));
+          setSearches(savedSearches(currentUser));
         } catch (err) {
           console.error("Couldn't log in: ", err);
           setCurrentUser(null);
@@ -112,7 +121,7 @@ function App() {
   return (
     <BrowserRouter>
       <UserContext.Provider
-        value={{ currentUser, setCurrentUser, savedSearches }}>
+        value={{ currentUser, setCurrentUser, searches }}>
         <div className="App">
           <NavBar logout={logout} />
           <AppRoutes login={login} signup={signup} />

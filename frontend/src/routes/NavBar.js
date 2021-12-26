@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import UserContext from "../auth/UserContext";
 import './Navbar.css';
@@ -26,10 +26,9 @@ function Navbar({ logout }) {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                    <Dropdown.Item href="#/mysearches">Saved Searches</Dropdown.Item>
+                    <Dropdown.Item href="/mysearches">Saved Searches</Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item href="/profile">View Profile</Dropdown.Item>
-                    <Dropdown.Item href="#/profile/edit">Edit Profile</Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
 

@@ -1,13 +1,14 @@
 import React, {
     useState,
     useRef,
-    useCallback
+    useCallback,
+    useContext
 } from "react";
 import {
     GoogleMap,
     useLoadScript,
-    // Marker,
-    // InfoWindow,
+    Marker,
+    InfoWindow,
 } from "@react-google-maps/api";
 import usePlacesAutocomplete, {
     getGeocode,
@@ -22,6 +23,7 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 
+import UserContext from "../auth/UserContext";
 import { GOOG_API } from "../keys";
 import styles from "./mapStyles";
 
@@ -36,47 +38,69 @@ const center = {
     lng: -95.712900
 };
 const options = {
-    styles
+    styles,
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+        // style: window.google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+        mapTypeIds: ["roadmap", "terrain"],
+    },
+    fullscreenControl: false
 };
 
 
-function Search() {
+
+function Locate({ panTo }) {
+    return (
+        <button
+            onClick={() => {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        panTo({
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        });
+                    },
+                    () => null);
+            }}>
+            <img
+                src="navigation-compass-find-position-device-svgrepo-com.svg"
+                alt="compass - Locate me" />
+        </button>
+    )
+}
+
+function Search({ panTo, setSelected }) {
     const kilometers200InMeters = 200 * 1000;
 
     const {
         ready,
         value,
-        suggestions,
+        suggestions: { status, data },
         setValue,
-        clearSuggestion,
+        clearSuggestions,
     } = usePlacesAutocomplete({
         requestOptions: {
             location: {
                 lat: () => 37.090000,
-                lng: () => -95.712900,
-                radius: kilometers200InMeters
-            }
+                lng: () => -95.712900
+            },
+            radius: kilometers200InMeters
         }
-    }); // TODO: update to user lat/lng from browser
-
-    console.log(JSON.stringify(suggestions))
-    const { data, status } = suggestions;
-
-    console.log(`ready: ${ready}, val: ${value}, \nstatus: ${status}, data: ${data}`)
-    // TODO: not getting any status or data
+    }); // TODO: update to user lat/lng from browser?
 
     return (
         <div className="searchBox">
             <Combobox onSelect={async (address) => {
+                setValue(address, false);
+                clearSuggestions();
                 try {
                     const results = await getGeocode({ address });
-                    clearSuggestion();
-                    console.log(`result: ${results[0]}`)
-
+                    const { lat, lng } = await getLatLng(results[0]);
+                    panTo({ lat, lng });
+                    setSelected({ lat, lng, id: "temp", title: "New Search" })
                 } catch (err) {
                     console.log(`error!: ${err}`);
                 }
-                console.log(address);
             }}>
                 <ComboboxInput
                     value={value}
@@ -103,23 +127,32 @@ function Search() {
 
 function Map() {
 
+    const { currentUser } = useContext(UserContext);
+    const savedSearches = currentUser.searches;
 
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: GOOG_API.KEY,
         libraries,
     });
 
-    // const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState(null);
 
     const mapRef = useRef();
     const onMapLoad = useCallback((map) => {
         mapRef.current = map;
-    }, [])
+    }, []);
+
+    const panTo = useCallback(({ lat, lng }) => {
+        mapRef.current.panTo({ lat, lng });
+        mapRef.current.setZoom(14);
+    }, []);
+
     if (loadError) return "Error loading maps";
     if (!isLoaded) return "Loading maps...";
 
+
     return <div>
-        <Search />
+        <Search panTo={panTo} setSelected={setSelected} /><Locate panTo={panTo} />
         <GoogleMap
             mapContainerStyle={mapContainerStyle}
             zoom={5}
@@ -127,28 +160,28 @@ function Map() {
             options={options}
             onLoad={onMapLoad}>
 
-            {/* {if (savedSearches && savedSearches.map((search) => {
+            {savedSearches && savedSearches.map((search) => {
                 <Marker
                     key={search.id}
                     position={{ lat: search.lat, lng: search.lng }}
                     icon={{
-                        url: "./location/to/magnifyingglass.svg",
+                        url: "../static/images/magnifying-glass-svgrepo-com.svg",
                         scaledSize: new window.google.maps.Size(12, 12),
                         origin: new window.google.maps.Point(0, 0),
-                        anchor: new window.google.maps.Point(6, 6)
+                        anchor: new window.google.maps.Point(6, 6),
                     }}
-                    onClick={() => {setSelected{search}}}
-                    />
-            }))} */}
+                    onClick={() => { setSelected(search) }}
+                />
+            })}
 
-            {/* {selected ? (<InfoWindow 
-                                position={{lat: search.lat, lng: search.lng}}
-                                onCloseClick={() => {setSelected(null)}}>
+            {selected ? (<InfoWindow
+                position={{ lat: selected.lat, lng: selected.lng }}
+                onCloseClick={() => { setSelected(null) }}>
                 <div>
-                    <h2>{search.title}</h2>
-                    <p><a href="#">Go to search</a></p>
+                    <h2>{selected.title}</h2>
+                    <p><a href="#">Return results for here.</a></p>
                 </div>
-            </InfoWindow>) : null } */}
+            </InfoWindow>) : null}
         </GoogleMap>
     </div>
 

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "use-places-autocomplete": "^1.3.3"
+  }
+}
