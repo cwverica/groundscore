@@ -15,6 +15,7 @@ const locationRoutes = require("./routes/locations");
 const postRoutes = require("./routes/posts");
 const searchRoutes = require("./routes/searches");
 const userRoutes = require("./routes/users");
+const agencyRoutes = require("./routes/agencies");
 
 const morgan = require("morgan");
 
@@ -33,6 +34,7 @@ app.use("/locations", locationRoutes);
 app.use("/posts", postRoutes);
 app.use("/searches", searchRoutes);
 app.use("/users", userRoutes);
+app.use("/agencies", agencyRoutes);
 
 
 

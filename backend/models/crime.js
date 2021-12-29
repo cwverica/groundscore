@@ -17,7 +17,7 @@ class Crime {
      *  { ORI, recordYear } = > [{ORI, recordYear, offense, actualCases, clearedCases}, ...]
      */
 
-    static async getByYear(ORI, recordYear) {
+    static async getByYear({ ORI, recordYear }) {
 
         const result = await db.query(
             `SELECT ORI,

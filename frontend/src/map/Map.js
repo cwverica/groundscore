@@ -26,6 +26,7 @@ import "@reach/combobox/styles.css";
 import UserContext from "../auth/UserContext";
 import { GOOG_API } from "../keys";
 import styles from "./mapStyles";
+import "./Map.css";
 
 
 const libraries = ["places"];
@@ -34,8 +35,8 @@ const mapContainerStyle = {
     height: "91.2vh"
 };
 const center = {
-    lat: 37.090000,
-    lng: -95.712900
+    lat: 38.090000,
+    lng: -96.712900
 };
 const options = {
     styles,
@@ -51,7 +52,7 @@ const options = {
 
 function Locate({ panTo }) {
     return (
-        <button
+        <button className="compass"
             onClick={() => {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -63,7 +64,7 @@ function Locate({ panTo }) {
                     () => null);
             }}>
             <img
-                src="navigation-compass-find-position-device-svgrepo-com.svg"
+                src="../static/images/navigation-compass-find-position-device-svgrepo-com.svg"
                 alt="compass - Locate me" />
         </button>
     )
@@ -92,6 +93,7 @@ function Search({ panTo, setSelected }) {
         <div className="searchBox">
             <Combobox onSelect={async (address) => {
                 setValue(address, false);
+                console.log(address);
                 clearSuggestions();
                 try {
                     const results = await getGeocode({ address });
@@ -158,7 +160,11 @@ function Map() {
             zoom={5}
             center={center}
             options={options}
-            onLoad={onMapLoad}>
+            onLoad={onMapLoad}
+            onClick={(event) => {
+                console.log(event);
+                setSelected({ lat: event.latLng.lat(), lng: event.latLng.lng(), id: "temp", title: "New Click" })
+            }}>
 
             {savedSearches && savedSearches.map((search) => {
                 <Marker

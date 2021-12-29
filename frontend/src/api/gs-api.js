@@ -86,6 +86,8 @@ class GroundScoreApi {
 
     // Search related routes
 
+    /** get all searches for supplied username */
+
     static async getUserSearches(username) {
         let res = await this.request(`searches/byuser/${username}`);
         return res.searches;
@@ -101,6 +103,27 @@ class GroundScoreApi {
     // Crime related routes
 
 
+    // Agency related routes
+
+    /** Add Agency to database */
+
+    static async addAgency(data) {
+        let res = await this.request(`agencies/`, data, "post");
+        if (res.success) {
+            console.log("Successfully added");
+            return true;
+        } else {
+            console.log("Add failed!");
+            return false;
+        }
+    };
+
+    /** Get a list of agencies by 2-character state abbreviation */
+
+    static async getAgenciesByState(state) {
+        let res = await this.request(`agencies/state/${state}`);
+        return res;
+    };
 
 
 }

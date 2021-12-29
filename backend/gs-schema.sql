@@ -15,7 +15,7 @@ CREATE TABLE Locations (
   id SERIAL PRIMARY KEY,
   lat float8 NOT NULL,
   lng float8 NOT NULL,
-  city TEXT,
+  county TEXT,
   state CHAR(2)
 );
 
@@ -45,10 +45,10 @@ CREATE TABLE Comments (
 
 CREATE TABLE Reporting_Agencies (
   ORI CHAR(9) UNIQUE PRIMARY KEY,
-  Name TEXT NOT NULL,
+  name TEXT NOT NULL,
   lat float8 NOT NULL,
   lng float8 NOT NULL,
-  city TEXT,
+  counties TEXT,
   state CHAR(2) NOT NULL
 );
 

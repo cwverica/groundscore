@@ -15,7 +15,7 @@ const router = express.Router();
 /** GET /[id]  => { location }
  * 
  *  returns the location object matching the id
- *      { id, lat, lnd, city, state }
+ *      { id, lat, lnd, county, state }
  */
 
 router.get("/:id", async function (req, res, next) {
@@ -40,10 +40,10 @@ router.post("/findId", async function (req, res, next) {
 });
 
 
-/** POST /findNearby { city, state } => { location }
+/** POST /findNearby { county, state } => { location }
  * 
- *  takes an object with city and state,
- *      returns [{ id, lat, lng, city, state}, ...]
+ *  takes an object with county and state,
+ *      returns [{ id, lat, lng, county, state}, ...]
  */
 
 router.post("/findNearby", async function (req, res, next) {
@@ -60,9 +60,9 @@ router.post("/findNearby", async function (req, res, next) {
  * 
  *  Adds new location to the database.
  * 
- *  locationData should be { latLngObj, city, state }
+ *  locationData should be { latLngObj, county, state }
  *        where latLngObj = { lat, lng }
- *  returns { id, lat, lng, city, state }
+ *  returns { id, lat, lng, county, state }
  */
 
 router.post("/", async function (req, res, next) {

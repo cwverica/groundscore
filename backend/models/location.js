@@ -13,7 +13,7 @@ class Location {
     /** Get object by id
      *  Takes a location Id, 
      * returns location object:
-     *  { id, lat, lng, city, state }  
+     *  { id, lat, lng, county, state }  
      */
 
     static async get(id) {
@@ -22,7 +22,7 @@ class Location {
             `SELECT id,
                     lat,
                     lng,
-                    city,
+                    county,
                     state
              FROM Locations
              WHERE id = $1`,
@@ -61,7 +61,7 @@ class Location {
 
     /** Creates a new location out of:
      *  -a latLngObj 
-     *  -city 
+     *  -county 
      *  -state (2 character abbreviation)
      * 
      * Location object is { lat, lng, }
@@ -69,7 +69,7 @@ class Location {
      *  Returns newly created location object 
      */
 
-    static async createLocation({ latLngObj, city, state }) {
+    static async createLocation({ latLngObj, county, state }) {
 
         const { lat, lng } = latLngObj;
 
@@ -77,14 +77,14 @@ class Location {
             `INSERT INTO Locations
                    (lat,
                     lng,
-                    city,
+                    county,
                     state)
             VALUES ($1, $2, $3, $4)
-            RETURNING id, lat, lng, city, state`,
+            RETURNING id, lat, lng, county, state`,
             [
                 lat,
                 lng,
-                city,
+                county,
                 state
             ]
         );
@@ -96,23 +96,23 @@ class Location {
 
 
     /** Searches database for all locations that exist in
-     *  provided city, state.
+     *  provided county, state.
      * 
      * returns an array of location objects of form
-     * [{id, lat, lng, city, state, population}, ...]
+     * [{id, lat, lng, county, state, population}, ...]
      *  or an empty array if no matches found
      */
-    static async findNearby({ city, state }) {
+    static async findNearby({ county, state }) {
         const result = await db.query(
             `SELECT id,
                      lat,
                      lng,
-                     city,
+                     county,
                      state
              FROM Locations
-             WHERE city = $1
+             WHERE county = $1
              AND state = $2`,
-            [city, state]
+            [county, state]
         );
 
         return result.rows;

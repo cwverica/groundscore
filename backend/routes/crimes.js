@@ -23,7 +23,7 @@ const router = express.Router();
 router.get("/:ORI/:recordYear", async function (req, res, next) {
     try {
         const { ORI, recordYear } = req.params;
-        const records = await Crime.get(ORI, recordYear);
+        const records = await Crime.get({ ORI, recordYear });
         return res.json({ records });
     } catch (err) {
         return next(err);

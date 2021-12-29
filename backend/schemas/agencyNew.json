@@ -1,0 +1,89 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://our.company.com/agencyNew.schema.json",
+    "type": "object",
+    "properties": {
+        "ORI": {
+            "type": "string",
+            "maxLength": 9,
+            "minLength": 9
+        },
+        "name": {
+            "type": "string"
+        },
+        "lat": {
+            "type": "number",
+            "minimum": 25,
+            "maximum": 50
+        },
+        "lng": {
+            "type": "number",
+            "minimum": -128,
+            "maximum": -64
+        },
+        "counties": {
+            "type": "string"
+        },
+        "state": {
+            "type": "string",
+            "enum": [
+                "AL",
+                "AZ",
+                "AR",
+                "CA",
+                "CO",
+                "CT",
+                "DE",
+                "DC",
+                "FL",
+                "GA",
+                "ID",
+                "IL",
+                "IN",
+                "IA",
+                "KS",
+                "KY",
+                "LA",
+                "ME",
+                "MD",
+                "MA",
+                "MI",
+                "MN",
+                "MS",
+                "MO",
+                "MT",
+                "NE",
+                "NV",
+                "NH",
+                "NJ",
+                "NM",
+                "NY",
+                "NC",
+                "OH",
+                "OK",
+                "OR",
+                "PA",
+                "RI",
+                "SC",
+                "SD",
+                "TN",
+                "TX",
+                "UT",
+                "VT",
+                "VA",
+                "WA",
+                "WV",
+                "WI",
+                "WY"
+            ]
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "ORI",
+        "recordYear",
+        "offense",
+        "actualCases",
+        "clearedCases"
+    ]
+}

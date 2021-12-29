@@ -85,8 +85,7 @@ function App() {
     const username = user.username;
     try {
       const searches = await GroundScoreApi.getUserSearches(username);
-      console.log("From searches");
-      popup(searches);
+      // popup(searches);
       return searches;
     } catch (err) {
       console.log(`Error fetching searchings: ${err}`);

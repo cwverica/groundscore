@@ -1,0 +1,11 @@
+.compass {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.searchBox {
+    position: absolute;
+    left: auto;
+    top: 5px;
+}
