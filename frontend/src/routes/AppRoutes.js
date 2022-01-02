@@ -7,6 +7,7 @@ import ProfileForm from '../profile/ProfileForm';
 import ProtectedRoute from './ProtectedRoute';
 import Homepage from '../homepage/Homepage';
 import Map from '../map/Map';
+import Search from '../search/Search';
 
 // Skeleton of navigation for homepage
 function AppRoutes({ login, signup }) {
@@ -15,7 +16,7 @@ function AppRoutes({ login, signup }) {
         <div>
             <Routes>
                 <Route exact path="/" element={<Homepage />} />
-                <Route exact path="/search" element={<Map />} />
+                <Route exact path="/search" element={<Search />} />
                 <Route exact path="/login" element={<LoginForm login={login} />} />
                 <Route exact path="/signup" element={<SignupForm signup={signup} />} />
                 <Route exact path="/profile" element={<ProtectedRoute />} >

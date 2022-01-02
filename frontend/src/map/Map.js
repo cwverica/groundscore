@@ -31,7 +31,7 @@ import "./Map.css";
 
 const libraries = ["places"];
 const mapContainerStyle = {
-    width: "99.5vw",
+    width: "69.5vw",
     height: "91.2vh"
 };
 const center = {
@@ -64,13 +64,14 @@ function Locate({ panTo }) {
                     () => null);
             }}>
             <img
-                src="../static/images/navigation-compass-find-position-device-svgrepo-com.svg"
+                src="../static/images/navigationcompass.svg"
                 alt="compass - Locate me" />
         </button>
     )
-}
+};
 
-function Search({ panTo, setSelected }) {
+
+function SearchBox({ panTo, setSelected }) {
     const kilometers200InMeters = 200 * 1000;
 
     const {
@@ -93,13 +94,14 @@ function Search({ panTo, setSelected }) {
         <div className="searchBox">
             <Combobox onSelect={async (address) => {
                 setValue(address, false);
-                console.log(address);
+                // console.log(address);
+                const usState = address.split(",").reverse()[1].trim();
                 clearSuggestions();
                 try {
                     const results = await getGeocode({ address });
                     const { lat, lng } = await getLatLng(results[0]);
                     panTo({ lat, lng });
-                    setSelected({ lat, lng, id: "temp", title: "New Search" })
+                    setSelected({ lat, lng, id: "temp", title: "New Search", state: usState })
                 } catch (err) {
                     console.log(`error!: ${err}`);
                 }
@@ -111,23 +113,24 @@ function Search({ panTo, setSelected }) {
                     }}
                     disabled={!ready}
                     placeholder="Enter an address"
+                    style={{ "text-align": "center" }}
                 />
                 <ComboboxPopover>
                     <ComboboxList>
                         {status === "OK" && data.map(({ id, description }) => (
                             <ComboboxOption key={id} value={description} />
                         ))}
-                        {status === "ZERO_RESULTS" && "No results found"}
-                        {status === "NOT_FOUND" && "Does not exist (according to google)"}
+                        {status === "ZERO_RESULTS" && <ComboboxOption value={"No results found"} />}
+                        {status === "NOT_FOUND" && <ComboboxOption value={"Does not exist (according to google)"} />}
                     </ComboboxList>
                 </ComboboxPopover>
             </Combobox>
         </div>
     )
-}
+};
 
 
-function Map() {
+function Map({ setStatus, setSearch }) {
 
     const { currentUser } = useContext(UserContext);
     const savedSearches = currentUser.searches;
@@ -153,8 +156,8 @@ function Map() {
     if (!isLoaded) return "Loading maps...";
 
 
-    return <div>
-        <Search panTo={panTo} setSelected={setSelected} /><Locate panTo={panTo} />
+    return <div className="map-container">
+        <SearchBox panTo={panTo} setSelected={setSelected} /><Locate panTo={panTo} />
         <GoogleMap
             mapContainerStyle={mapContainerStyle}
             zoom={5}
@@ -166,8 +169,8 @@ function Map() {
                 setSelected({ lat: event.latLng.lat(), lng: event.latLng.lng(), id: "temp", title: "New Click" })
             }}>
 
-            {savedSearches && savedSearches.map((search) => {
-                <Marker
+            {savedSearches.length > 0 && savedSearches.map((search) => {
+                return (<Marker
                     key={search.id}
                     position={{ lat: search.lat, lng: search.lng }}
                     icon={{
@@ -177,7 +180,7 @@ function Map() {
                         anchor: new window.google.maps.Point(6, 6),
                     }}
                     onClick={() => { setSelected(search) }}
-                />
+                />);
             })}
 
             {selected ? (<InfoWindow
@@ -185,12 +188,17 @@ function Map() {
                 onCloseClick={() => { setSelected(null) }}>
                 <div>
                     <h2>{selected.title}</h2>
-                    <p><a href="#">Return results for here.</a></p>
+                    <p><button onClick={() => {
+                        setSearch(selected);
+                        setStatus("loading");
+                    }}>Return results for here.</button></p>
                 </div>
             </InfoWindow>) : null}
         </GoogleMap>
     </div>
 
-}
+};
+
+
 
 export default Map;

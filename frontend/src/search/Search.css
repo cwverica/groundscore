@@ -1,0 +1,16 @@
+#main-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+}
+
+#map-container {
+    order: 1;
+    flex-grow: 3;
+}
+
+#data-container {
+    order: 2;
+    flex-grow: 2;
+}

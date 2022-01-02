@@ -1,11 +1,18 @@
+.map-container { 
+    position: relative;
+}
+
 .compass {
     position: absolute;
     top: 5px;
     right: 5px;
+    z-index: 10;
 }
 
 .searchBox {
     position: absolute;
-    left: auto;
-    top: 5px;
+    text-align: center;
+    top: 50px;
+    right: 5px;
+    z-index: 10;
 }

@@ -36,6 +36,8 @@ class GroundScoreApi {
     //////// Individual API routes
 
 
+
+
     // User related routes
 
 
@@ -66,7 +68,10 @@ class GroundScoreApi {
 
     static async getCurrentUser(username) {
         let res = await this.request(`users/${username}`);
-        return res.user;
+        const user = res.user;
+        res = await this.request(`searches/byuser/${username}`);
+        user.searches = res.searches || [];
+        return user;
     }
 
     /** Authenticate user */
@@ -81,7 +86,35 @@ class GroundScoreApi {
     }
 
 
+
+
     // Location related routes
+
+    /** Gets a location ID by the object { lat, lng } that is passed to it. */
+
+    static async getLocationByLatLng(latLngObj) {
+        let res = await this.request(`locations/findId`, latLngObj, "post");
+        return res;
+    };
+
+    /** Gets a location object by the provided ID */
+
+    static async getLocationById(id) {
+        let res = await this.request(`locations/${id}`);
+        return res;
+    };
+
+    /** Creates a new location in the database from supplied data. 
+     * data: { latLngObj, state, county (optional)}
+     *          where latLngObj = { lat, lng }
+     */
+
+    static async createNewLocation(data) {
+        let res = await this.request(`locations/`, data, "post");
+        return res;
+    }
+
+
 
 
     // Search related routes
@@ -94,13 +127,37 @@ class GroundScoreApi {
     }
 
 
+
+
     // Post related routes
+
+
 
 
     // Comment related routes
 
 
+
+
     // Crime related routes
+
+    /** Retrieves data for each crime type from ORI by year */
+
+    static async getORICrimeDataByYear({ ORI, recordYear }) {
+        let res = await this.request(`crimes/${ORI}/${recordYear}`);
+        return res;
+    };
+
+    /** Creates new crime object in database based on supplied data.
+     *  data: { ORI, recordYear, offense, actualCases, clearedCases }
+     */
+
+    static async createNewCrime(data) {
+        let res = await this.request(`crimes/`, data, "post");
+        return res;
+    }
+
+
 
 
     // Agency related routes

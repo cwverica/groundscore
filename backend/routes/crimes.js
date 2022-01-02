@@ -23,7 +23,7 @@ const router = express.Router();
 router.get("/:ORI/:recordYear", async function (req, res, next) {
     try {
         const { ORI, recordYear } = req.params;
-        const records = await Crime.get({ ORI, recordYear });
+        const records = await Crime.getByYear({ ORI, recordYear });
         return res.json({ records });
     } catch (err) {
         return next(err);
@@ -48,7 +48,7 @@ router.post("/", async function (req, res, next) {
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs);
         }
-        const outcome = Crime.save(req.body);
+        const outcome = await Crime.save(req.body);
         return res.json({ success: outcome.saved ? true : false });
     } catch (err) {
         return next(err);

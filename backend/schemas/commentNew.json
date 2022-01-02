@@ -1,9 +1,14 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://our.company.com/postNew.schema.json",
+    "$id": "http://our.company.com/commentNew.schema.json",
     "type": "object",
     "minProperties": 2,
     "properties": {
+        "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30
+        },
         "post_referenceId": {
             "type": "integer"
         },
@@ -17,6 +22,7 @@
     },
     "additionalProperties": false,
     "required": [
+        "username",
         "body"
     ]
 }

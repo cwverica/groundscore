@@ -20,7 +20,7 @@ const router = express.Router();
 
 router.get("/:id", async function (req, res, next) {
     try {
-        const search = Search.get(id);
+        const search = await Search.get(id);
         return res.json({ search });
     } catch (err) {
         return next(err);
@@ -38,7 +38,7 @@ router.get("/:id", async function (req, res, next) {
 
 router.get("/byuser/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
-        const searches = Search.getAllByUser(req.params.username);
+        const searches = await Search.getAllByUser(req.params.username);
         return res.json({ searches });
     } catch (err) {
         return next(err);

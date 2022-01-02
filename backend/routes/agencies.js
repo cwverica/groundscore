@@ -55,7 +55,7 @@ router.post("/", async function (req, res, next) {
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs);
         }
-        const outcome = Agency.save(req.body);
+        const outcome = await Agency.save(req.body);
         return res.json({ success: outcome.saved ? true : false });
     } catch (err) {
         return next(err);

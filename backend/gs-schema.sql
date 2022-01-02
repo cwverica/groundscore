@@ -16,7 +16,7 @@ CREATE TABLE Locations (
   lat float8 NOT NULL,
   lng float8 NOT NULL,
   county TEXT,
-  state CHAR(2)
+  state CHAR(2) NOT NULL
 );
 
 -- Consider changing username to author/owner

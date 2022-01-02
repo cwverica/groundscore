@@ -62,8 +62,8 @@ function App() {
       // window.alert(`You have signed up with:\n
       //                 username: ${username}\n
       //                 name: ${firstName} ${lastName}\n
-      //                 password: ${'***********'}
-      //                 email: ${email}`)
+      //                 password: ***********\n
+      //                 email: ${email}`);
       return { success: true };
     } catch (errors) {
       console.error("Signup failed:", errors);
@@ -79,19 +79,6 @@ function App() {
   }
 
 
-  /** Finds saved searches for logged in user */
-  async function savedSearches(user) {
-    if (!token) return false;
-    const username = user.username;
-    try {
-      const searches = await GroundScoreApi.getUserSearches(username);
-      // popup(searches);
-      return searches;
-    } catch (err) {
-      console.log(`Error fetching searchings: ${err}`);
-      return err;
-    }
-  }
 
   useEffect(function loadUserInfo() {
 
@@ -102,7 +89,7 @@ function App() {
           GroundScoreApi.token = token;
           let currentUser = await GroundScoreApi.getCurrentUser(username);
           setCurrentUser(currentUser);
-          setSearches(savedSearches(currentUser));
+          setSearches(currentUser.searches);
         } catch (err) {
           console.error("Couldn't log in: ", err);
           setCurrentUser(null);

@@ -29,9 +29,9 @@ class Agency {
             [ORI],
         );
 
-        const search = result.rows[0];
+        const agency = result.rows[0];
 
-        return search;
+        return agency;
     };
 
 
@@ -55,9 +55,9 @@ class Agency {
             [state],
         );
 
-        const search = result.rows;
+        const agencies = result.rows;
 
-        return search;
+        return agencies;
     };
 
 

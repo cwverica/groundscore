@@ -81,9 +81,9 @@
     "additionalProperties": false,
     "required": [
         "ORI",
-        "recordYear",
-        "offense",
-        "actualCases",
-        "clearedCases"
+        "name",
+        "lat",
+        "lng",
+        "state"
     ]
 }

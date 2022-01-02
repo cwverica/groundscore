@@ -23,7 +23,7 @@ const router = express.Router();
 
 router.get("/:id", async function (req, res, next) {
     try {
-        const posts = await Post.get(req.params.id);
+        const post = await Post.get(req.params.id);
         return res.json({ post });
     } catch (err) {
         return next(err);
