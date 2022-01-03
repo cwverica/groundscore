@@ -143,7 +143,7 @@ class GroundScoreApi {
 
     /** Retrieves data for each crime type from ORI by year */
 
-    static async getORICrimeDataByYear({ ORI, recordYear }) {
+    static async getORICrimeDataByYear(ORI, recordYear) {
         let res = await this.request(`crimes/${ORI}/${recordYear}`);
         return res;
     };

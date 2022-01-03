@@ -42,21 +42,28 @@ class Search {
     /**
      * Get saved searches: takes a username and returns all of the searches
      * the user has saved.
-     *  username => [{id, title, username, locationId, closestOri, createdAt, userComments}, ...]
+     *  username => [{id, title, username, locationId, closestOri, createdAt, 
+     *  userComments, lat, lng, county, state }, ...]
      */
 
     static async getAllByUser(username) {
 
         const result = await db.query(
-            `SELECT id,
-                    title,
-                    username,
-                    location_id AS "locationId",
-                    closest_ori AS "closestOri",
-                    created_at AS "createdAt",
-                    user_comments AS "userComments"
-            FROM Saved_Searches
-            WHERE username = $1`,
+            `SELECT s.id,
+                    s.title,
+                    s.username,
+                    s.location_id AS "locationId",
+                    s.closest_ori AS "closestOri",
+                    s.created_at AS "createdAt",
+                    s.user_comments AS "userComments",
+                    l.lat,
+                    l.lng,
+                    l.county,
+                    l.state
+            FROM Saved_Searches as s
+            INNER JOIN Locations as l
+            ON s.location_id = l.id
+            WHERE s.username = $1`,
             [username],
         );
 

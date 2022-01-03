@@ -10,8 +10,14 @@ import Map from "../map/Map";
 
 import "./Search.css"
 
+// Set as constants for now, maybe later could be user input
+const STARTYEAR = 2016;
+const ENDYEAR = 2020;
+
+
 
 function Search() {
+
 
     const [status, setStatus] = useState("empty")
     const [search, setSearch] = useState({});
@@ -19,9 +25,15 @@ function Search() {
 
     async function loadData(search) {
         return;
-        // if (search.id !== "temp") {
-
-        // }
+        if (search.id !== "temp") {
+            const crimes = {};
+            for (let i = STARTYEAR; i <= ENDYEAR; i++) {
+                crimes[i] = crimes[i] || [];
+                let crimeYear = await GroundScoreApi.getORICrimeDataByYear(search.closestOri, i);
+                crimes[i].push(crimeYear);
+            };
+            // TODO: Here I am to SAVE THE DAAAYYY!!!!
+        }
     }
 
     return (

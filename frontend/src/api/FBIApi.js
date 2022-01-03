@@ -62,10 +62,3 @@ class FBIAPI {
 
 export default FBIAPI;
 
-// const counties = "KAUFMAN";
-// console.log(counties);
-// const countySplit = counties.split(";");
-// const countyList = countySplit.map((county) => {
-//     return county.trim();
-// });
-

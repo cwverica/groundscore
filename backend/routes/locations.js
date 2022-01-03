@@ -15,7 +15,7 @@ const router = express.Router();
 /** GET /[id]  => { location }
  * 
  *  returns the location object matching the id
- *      { id, lat, lnd, county, state }
+ *      { id, lat, lng, county, state }
  */
 
 router.get("/:id", async function (req, res, next) {
