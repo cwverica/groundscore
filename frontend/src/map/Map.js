@@ -134,7 +134,7 @@ function SearchBox({ panTo, setSelected }) {
 function Map({ setStatus, setSearch }) {
 
     const { currentUser } = useContext(UserContext);
-    const savedSearches = currentUser.searches;
+    const savedSearches = currentUser ? currentUser.searches : null;
 
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: GOOGLE_KEY,
