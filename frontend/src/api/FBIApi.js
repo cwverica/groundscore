@@ -11,7 +11,8 @@ const stateAbbreviations =
         "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
     ];
 
-const BASE_URL = "https://api.usa.gov/crime/fbi/sapi/api";
+const BASE_URL = process.env.REACT_APP_FBI_BASE_URL;
+const FBI_KEY = process.env.REACT_APP_FBI_KEY;
 
 /** API Class.
  * 
@@ -24,7 +25,7 @@ class FBIAPI {
 
         const url = `${BASE_URL}/${endpoint}/`;
         const headers = {
-            "X-Api-Key": FBI_API.KEY,
+            "X-Api-Key": FBI_KEY,
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
         };

@@ -24,10 +24,11 @@ import {
 import "@reach/combobox/styles.css";
 
 import UserContext from "../auth/UserContext";
-import { GOOG_API } from "../keys";
 import styles from "./mapStyles";
 import "./Map.css";
 
+
+const GOOGLE_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -136,7 +137,7 @@ function Map({ setStatus, setSearch }) {
     const savedSearches = currentUser.searches;
 
     const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: GOOG_API.KEY,
+        googleMapsApiKey: GOOGLE_KEY,
         libraries,
     });
 
