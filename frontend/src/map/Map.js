@@ -174,7 +174,7 @@ function Map({ setStatus, setSearch }) {
                     key={search.id}
                     position={{ lat: search.lat, lng: search.lng }}
                     icon={{
-                        url: "../static/images/magnifying-glass-svgrepo-com.svg",
+                        url: "../static/images/magnifyingglass.svg",
                         scaledSize: new window.google.maps.Size(12, 12),
                         origin: new window.google.maps.Point(0, 0),
                         anchor: new window.google.maps.Point(6, 6),

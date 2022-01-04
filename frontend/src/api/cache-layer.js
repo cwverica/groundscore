@@ -1,4 +1,3 @@
-import GroundScoreAPI from './gs-api';
 import FBIAPI from './FBIApi';
 import GroundScoreApi from './gs-api';
 
@@ -14,26 +13,40 @@ import GroundScoreApi from './gs-api';
 class CacheLayer {
 
 
-    static async getORIsByState(state) {
-        let ORIList = await GroundScoreAPI.getAgenciesByState(state);
+    static async getOrCreateLocation(search) {
 
-        if (ORIList.length === 0) {
+        let location;
+        const id = await GroundScoreApi.getLocationByLatLng(search);
+
+        if (!location) {
+            location = await GroundScoreApi.createNewLocation(search);
+        } else {
+            location = await GroundScoreApi.getLocationById(id);
+        }
+
+        return location;
+    }
+
+
+    static async getAgenciesByState(state) {
+        let agencyList = await GroundScoreApi.getAgenciesByState(state);
+
+        if (agencyList.length === 0) {
             let tempList = await FBIAPI.getAgenciesByState(state);
-            ORIList = tempList.map((agency) => {
-                const agencyObj;
+            agencyList = tempList.map((agency) => {
+                let agencyObj = {};
                 agencyObj.ORI = agency.ori;
                 agencyObj.name = agency.agency_name;
                 agencyObj.lat = agency.latitude;
                 agencyObj.lng = agency.longitude;
                 agencyObj.counties = agency.county_name.split(";").map((county) => county.trim());
 
-                GroundScoreAPI.addAgency(agencyObj);
+                GroundScoreApi.addAgency(agencyObj);
 
                 return agencyObj;
             });
         }
-
-        return ORIList;
+        return agencyList;
     }
 
 
@@ -47,7 +60,7 @@ class CacheLayer {
         let crimes = {};
         let missingYears = [];
         for (let i = startYear; i <= endYear; i++) {
-            let crimeYear = await GroundScoreAPI.getORICrimeDataByYear(ORI, i);
+            let crimeYear = await GroundScoreApi.getORICrimeDataByYear(ORI, i);
             if (crimeYear.length === 0) {
                 missingYears.push(i);
             } else {

@@ -45,12 +45,19 @@ class Location {
 
         const { lat, lng } = latLngObj;
 
+        const minLat = lat - .0005;
+        const maxLat = lat + .0005;
+        const minLng = lng + .0005;
+        const maxLng = lng - .0005;
+
         const result = await db.query(
             `SELECT id
              FROM Locations
-             WHERE lat = $1
-             AND lng = $2`,
-            [lat, lng],
+             WHERE lat > $1
+             AND lat < $2
+             AND lng < $3
+             AND lng > $4`,
+            [minLat, maxLat, minLng, maxLng],
         );
 
         const id = result.rows[0];
@@ -60,18 +67,15 @@ class Location {
 
 
     /** Creates a new location out of:
-     *  -a latLngObj 
+     *  -lat
+     *  -lng 
      *  -county 
      *  -state (2 character abbreviation)
-     * 
-     * Location object is { lat, lng, }
      * 
      *  Returns newly created location object 
      */
 
-    static async createLocation({ latLngObj, county, state }) {
-
-        const { lat, lng } = latLngObj;
+    static async create({ lat, lng, county, state }) {
 
         const result = await db.query(
             `INSERT INTO Locations

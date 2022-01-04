@@ -94,24 +94,25 @@ class GroundScoreApi {
 
     static async getLocationByLatLng(latLngObj) {
         let res = await this.request(`locations/findId`, latLngObj, "post");
-        return res;
+        return res.location;
     };
 
-    /** Gets a location object by the provided ID */
+    /** Gets a location object { id, lat, lng, county, state } by the provided ID */
 
     static async getLocationById(id) {
         let res = await this.request(`locations/${id}`);
-        return res;
+        return res.location;
     };
 
     /** Creates a new location in the database from supplied data. 
-     * data: { latLngObj, state, county (optional)}
-     *          where latLngObj = { lat, lng }
+     * data: { lat, lng , state, county (optional)}
+     * 
+     * returns { id, lat, lng, county, state }
      */
 
     static async createNewLocation(data) {
         let res = await this.request(`locations/`, data, "post");
-        return res;
+        return res.location;
     }
 
 
@@ -145,7 +146,7 @@ class GroundScoreApi {
 
     static async getORICrimeDataByYear(ORI, recordYear) {
         let res = await this.request(`crimes/${ORI}/${recordYear}`);
-        return res;
+        return res.records;
     };
 
     /** Creates new crime object in database based on supplied data.
@@ -179,8 +180,15 @@ class GroundScoreApi {
 
     static async getAgenciesByState(state) {
         let res = await this.request(`agencies/state/${state}`);
-        return res;
+        return res.agencies;
     };
+
+    /** Get an agency object from ORI */
+
+    static async getAgencyByORI(ORI) {
+        let res = await this.request(`agencies/${ORI}`);
+        return res.agency;
+    }
 
 
 }

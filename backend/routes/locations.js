@@ -60,8 +60,7 @@ router.post("/findNearby", async function (req, res, next) {
  * 
  *  Adds new location to the database.
  * 
- *  locationData should be { latLngObj, state, county (optional) }
- *        where latLngObj = { lat, lng }
+ *  locationData should be { lat, lng, state, county (optional) }
  *  returns { id, lat, lng, county, state }
  */
 

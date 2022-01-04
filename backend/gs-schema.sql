@@ -15,6 +15,7 @@ CREATE TABLE Locations (
   id SERIAL PRIMARY KEY,
   lat float8 NOT NULL,
   lng float8 NOT NULL,
+  city TEXT,
   county TEXT,
   state CHAR(2) NOT NULL
 );

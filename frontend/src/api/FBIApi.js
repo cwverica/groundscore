@@ -22,8 +22,12 @@ class FBIAPI {
 
     static async request(endpoint, data = {}, method = "get") {
 
-        const url = `${BASE_URL}/${endpoint}`;
-        const headers = { "X-Api-Key": FBI_API.KEY };
+        const url = `${BASE_URL}/${endpoint}/`;
+        const headers = {
+            "X-Api-Key": FBI_API.KEY,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+        };
         const params = (method === "get")
             ? data
             : {};
