@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import { FBI_API } from "../keys";
-
 
 const stateAbbreviations =
     [
