@@ -23,14 +23,14 @@ function App() {
 
 
   /** A function used in development to test things, once useless, delete */
-  function popup(data) {
-    if (Object.prototype.toString(data) === "[object Object]") {
-      window.alert(`You entered "${Object.keys(data).map((key) => `${key}: ${data[key]}`)}"`);
-    } else {
-      window.alert(`You entered "${data}"`)
-    }
+  // function popup(data) {
+  //   if (Object.prototype.toString(data) === "[object Object]") {
+  //     window.alert(`You entered "${Object.keys(data).map((key) => `${key}: ${data[key]}`)}"`);
+  //   } else {
+  //     window.alert(`You entered "${data}"`)
+  //   }
 
-  }
+  // }
 
 
   /** Handles Login

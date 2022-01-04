@@ -1,13 +1,9 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { useState } from 'react';
 
 import GroundScoreApi from '../api/gs-api';
-import FBIApi from '../api/FBIApi';
 import CacheLayer from '../api/cache-layer';
-import UserContext from '../auth/UserContext';
 
 import Map from "../map/Map";
-// import DataDisplay from "../dataDisplay/DataDisplay";
 
 import "./Search.css"
 

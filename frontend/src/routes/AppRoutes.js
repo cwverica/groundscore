@@ -1,12 +1,11 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import LoginForm from '../auth/LoginForm';
 import SignupForm from '../auth/SignupForm';
 import ProfileForm from '../profile/ProfileForm';
 import ProtectedRoute from './ProtectedRoute';
 import Homepage from '../homepage/Homepage';
-import Map from '../map/Map';
 import Search from '../search/Search';
 
 // Skeleton of navigation for homepage
