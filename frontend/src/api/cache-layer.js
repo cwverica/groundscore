@@ -16,37 +16,45 @@ class CacheLayer {
     static async getOrCreateLocation(search) {
 
         let location;
-        const id = await GroundScoreApi.getLocationByLatLng(search);
+        try {
+            const id = await GroundScoreApi.getLocationByLatLng(search);
 
-        if (!location) {
-            location = await GroundScoreApi.createNewLocation(search);
-        } else {
-            location = await GroundScoreApi.getLocationById(id);
+            if (!location) {
+                location = await GroundScoreApi.createNewLocation(search);
+            } else {
+                location = await GroundScoreApi.getLocationById(id);
+            }
+
+            return location;
+        } catch (err) {
+            console.log(err);
         }
-
-        return location;
     }
 
 
     static async getAgenciesByState(state) {
-        let agencyList = await GroundScoreApi.getAgenciesByState(state);
+        try {
+            let agencyList = await GroundScoreApi.getAgenciesByState(state);
 
-        if (agencyList.length === 0) {
-            let tempList = await FBIAPI.getAgenciesByState(state);
-            agencyList = tempList.map((agency) => {
-                let agencyObj = {};
-                agencyObj.ORI = agency.ori;
-                agencyObj.name = agency.agency_name;
-                agencyObj.lat = agency.latitude;
-                agencyObj.lng = agency.longitude;
-                agencyObj.counties = agency.county_name.split(";").map((county) => county.trim());
+            if (agencyList.length === 0) {
+                let tempList = await FBIAPI.getAgenciesByState(state);
+                agencyList = tempList.map((agency) => {
+                    let agencyObj = {};
+                    agencyObj.ORI = agency.ori;
+                    agencyObj.name = agency.agency_name;
+                    agencyObj.lat = agency.latitude;
+                    agencyObj.lng = agency.longitude;
+                    agencyObj.counties = agency.county_name.split(";").map((county) => county.trim());
 
-                GroundScoreApi.addAgency(agencyObj);
+                    GroundScoreApi.addAgency(agencyObj);
 
-                return agencyObj;
-            });
+                    return agencyObj;
+                });
+            }
+            return agencyList;
+        } catch (err) {
+            console.log(err);
         }
-        return agencyList;
     }
 
 
@@ -56,39 +64,42 @@ class CacheLayer {
 
     static async getCrimesByORIAndYears(ORI, startYear, endYear) {
         if (startYear > endYear) throw new Error("Start year must be before end year.");
-
-        let crimes = {};
-        let missingYears = [];
-        for (let i = startYear; i <= endYear; i++) {
-            let crimeYear = await GroundScoreApi.getORICrimeDataByYear(ORI, i);
-            if (crimeYear.length === 0) {
-                missingYears.push(i);
-            } else {
-                crimes[i] = crimeYear;
-            }
-        }
-        if (missingYears.length > 0) {
-            let missingStart = missingYears[0];
-            let missingEnd = missingYears[missingYears.length - 1];
-            let newData = await FBIAPI.getCrimesFromORI({ ORI, startYear: missingStart, endYear: missingEnd });
-            newData.forEach((crime) => {
-                let currentYear = crime.data_year;
-                if (missingYears.includes(currentYear)) {
-                    crimes[currentYear] = crimes[currentYear] || [];
-                    let newCrimeObj = {};
-                    newCrimeObj.ORI = crime.ori;
-                    newCrimeObj.recordYear = currentYear;
-                    newCrimeObj.offense = crime.offense;
-                    newCrimeObj.actualCases = crime.actual;
-                    newCrimeObj.clearedCases = crime.cleared;
-
-                    GroundScoreApi.createNewCrime(newCrimeObj);
-
-                    crimes[currentYear].push(newCrimeObj);
+        try {
+            let crimes = {};
+            let missingYears = [];
+            for (let i = startYear; i <= endYear; i++) {
+                let crimeYear = await GroundScoreApi.getORICrimeDataByYear(ORI, i);
+                if (crimeYear.length === 0) {
+                    missingYears.push(i);
+                } else {
+                    crimes[i] = crimeYear;
                 }
-            });
+            }
+            if (missingYears.length > 0) {
+                let missingStart = missingYears[0];
+                let missingEnd = missingYears[missingYears.length - 1];
+                let newData = await FBIAPI.getCrimesFromORI({ ORI, startYear: missingStart, endYear: missingEnd });
+                newData.forEach((crime) => {
+                    let currentYear = crime.data_year;
+                    if (missingYears.includes(currentYear)) {
+                        crimes[currentYear] = crimes[currentYear] || [];
+                        let newCrimeObj = {};
+                        newCrimeObj.ORI = crime.ori;
+                        newCrimeObj.recordYear = currentYear;
+                        newCrimeObj.offense = crime.offense;
+                        newCrimeObj.actualCases = crime.actual;
+                        newCrimeObj.clearedCases = crime.cleared;
+
+                        GroundScoreApi.createNewCrime(newCrimeObj);
+
+                        crimes[currentYear].push(newCrimeObj);
+                    }
+                });
+            }
+            return crimes;
+        } catch (err) {
+            console.log(err);
         }
-        return crimes;
     }
 }
 

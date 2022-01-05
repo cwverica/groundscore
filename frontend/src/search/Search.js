@@ -59,8 +59,8 @@ function Search() {
                 {status === "loading" && loadData(search)}
                 {status === "ready" && (
                     <ul>
-                        {crimeData.map((crime) => {
-                            return <li>{crime}</li>
+                        {crimeData.map(async (crime) => {
+                            return <li>{await crime}</li>
                         })}
                     </ul>
                 )

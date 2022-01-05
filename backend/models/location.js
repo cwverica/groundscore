@@ -13,7 +13,7 @@ class Location {
     /** Get object by id
      *  Takes a location Id, 
      * returns location object:
-     *  { id, lat, lng, county, state }  
+     *  { id, lat, lng, city, county, state }  
      */
 
     static async get(id) {
@@ -22,6 +22,7 @@ class Location {
             `SELECT id,
                     lat,
                     lng,
+                    city,
                     county,
                     state
              FROM Locations
@@ -69,25 +70,28 @@ class Location {
     /** Creates a new location out of:
      *  -lat
      *  -lng 
+     *  -city
      *  -county 
      *  -state (2 character abbreviation)
      * 
      *  Returns newly created location object 
      */
 
-    static async create({ lat, lng, county, state }) {
+    static async create({ lat, lng, city, county, state }) {
 
         const result = await db.query(
             `INSERT INTO Locations
                    (lat,
                     lng,
+                    city,
                     county,
                     state)
-            VALUES ($1, $2, $3, $4)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING id, lat, lng, county, state`,
             [
                 lat,
                 lng,
+                city,
                 county,
                 state
             ]
@@ -103,7 +107,7 @@ class Location {
      *  provided county, state.
      * 
      * returns an array of location objects of form
-     * [{id, lat, lng, county, state, population}, ...]
+     * [{id, lat, lng, city, county, state}, ...]
      *  or an empty array if no matches found
      */
     static async findNearby({ county, state }) {
@@ -111,6 +115,7 @@ class Location {
             `SELECT id,
                      lat,
                      lng,
+                     city,
                      county,
                      state
              FROM Locations

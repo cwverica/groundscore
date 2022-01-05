@@ -15,7 +15,7 @@ const router = express.Router();
 /** GET /[id]  => { location }
  * 
  *  returns the location object matching the id
- *      { id, lat, lng, county, state }
+ *      { id, lat, lng, city, county, state }
  */
 
 router.get("/:id", async function (req, res, next) {
@@ -60,7 +60,7 @@ router.post("/findNearby", async function (req, res, next) {
  * 
  *  Adds new location to the database.
  * 
- *  locationData should be { lat, lng, state, county (optional) }
+ *  locationData should be { lat, lng, state, city, county }
  *  returns { id, lat, lng, county, state }
  */
 

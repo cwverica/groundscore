@@ -33,11 +33,12 @@ class FBIAPI {
 
         try {
             let res = (await axios({ url, method, data, params, headers })).data;
+            console.log(res);
             return res;
         } catch (err) {
-            console.error("FBI API Error:", err.response);
-            let message = err.response.data.error.message;
-            throw Array.isArray(message) ? message : [message];
+            console.error("FBI API Error:", err);
+            // let message = err.data.error.message;
+            // throw Array.isArray(message) ? message : [message];
         }
     };
 

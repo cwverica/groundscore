@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, {
     useState,
     useRef,
@@ -29,6 +30,7 @@ import "./Map.css";
 
 
 const GOOGLE_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+const GOOGLE_BASE = "https://maps.googleapis.com/maps/api/";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -95,14 +97,24 @@ function SearchBox({ panTo, setSelected }) {
         <div className="searchBox">
             <Combobox onSelect={async (address) => {
                 setValue(address, false);
-                // console.log(address);
-                const usState = address.split(",").reverse()[1].trim();
                 clearSuggestions();
                 try {
                     const results = await getGeocode({ address });
-                    const { lat, lng } = await getLatLng(results[0]);
+                    const geocode = results[0];
+
+                    const city = geocode.address_components.filter((component) => {
+                        return component.types.includes("locality")
+                    })[0].long_name;
+                    const county = geocode.address_components.filter((component) => {
+                        return component.types.includes("administrative_area_level_2")
+                    })[0].long_name.split(" ").slice(0, -1).join(" ").trim();
+                    const state = geocode.address_components.filter((component) => {
+                        return component.types.includes("administrative_area_level_1")
+                    })[0].short_name;
+                    const { lat, lng } = await getLatLng(geocode);
+
                     panTo({ lat, lng });
-                    setSelected({ lat, lng, id: "temp", title: "New Search", state: usState })
+                    setSelected({ id: "temp", title: "New Search", lat, lng, state, city, county })
                 } catch (err) {
                     console.log(`error!: ${err}`);
                 }
@@ -165,9 +177,28 @@ function Map({ setStatus, setSearch }) {
             center={center}
             options={options}
             onLoad={onMapLoad}
-            onClick={(event) => {
-                console.log(event);
-                setSelected({ lat: event.latLng.lat(), lng: event.latLng.lng(), id: "temp", title: "New Click" })
+            onClick={async (event) => {
+                const lat = event.latLng.lat();
+                const lng = event.latLng.lng();
+                const url = `${GOOGLE_BASE}geocode/json?latlng=${lat},${lng}&key=${GOOGLE_KEY}`
+                let method = "get";
+                try {
+                    const geocode = (await axios({ url, method })).data.results[0];
+
+                    const city = geocode.address_components.filter((component) => {
+                        return component.types.includes("locality")
+                    })[0].long_name;
+                    const county = geocode.address_components.filter((component) => {
+                        return component.types.includes("administrative_area_level_2")
+                    })[0].long_name.split(" ").slice(0, -1).join(" ").trim();
+                    const state = geocode.address_components.filter((component) => {
+                        return component.types.includes("administrative_area_level_1")
+                    })[0].short_name;
+
+                    setSelected({ id: "temp", title: "New Click", lat, lng, city, county, state });
+                } catch (err) {
+                    console.log(err);
+                }
             }}>
 
             {savedSearches.length > 0 && savedSearches.map((search) => {
@@ -192,11 +223,11 @@ function Map({ setStatus, setSearch }) {
                     <p><button onClick={() => {
                         setSearch(selected);
                         setStatus("loading");
-                    }}>Return results for here.</button></p>
+                    }}>{`Return results for ${selected.city}, ${selected.state}.`}</button></p>
                 </div>
             </InfoWindow>) : null}
         </GoogleMap>
-    </div>
+    </div >
 
 };
 
