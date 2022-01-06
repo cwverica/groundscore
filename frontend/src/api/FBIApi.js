@@ -25,7 +25,10 @@ class FBIAPI {
         const headers = {
             "X-Api-Key": FBI_KEY,
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "https://groundscore.vercel.app/",
+            "Access-Control-Request-Method": "GET",
+            "Access-Control-Request-Headers": "X-Api-Key, Content-Type",
+            "Access-Control-Allow-Credentials": "true"
         };
         const params = (method === "get")
             ? data
