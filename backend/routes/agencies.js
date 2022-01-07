@@ -12,14 +12,14 @@ const agencyNewSchema = require("../schemas/agencyNew.json"); // TODO: this
 const router = express.Router();
 
 
-/** GET /[ORI] => { ORI, name, lat, lng, counties, state }
- * Retrieves an an agency object from given ORI
+/** GET /[ori] => { ori, name, lat, lng, counties, state }
+ * Retrieves an an agency object from given ori
  */
 
-router.get("/:ORI", async function (req, res, next) {
+router.get("/:ori", async function (req, res, next) {
     try {
-        const { ORI } = req.params;
-        const agency = await Agency.get(ORI);
+        const { ori } = req.params;
+        const agency = await Agency.get(ori);
         return res.json({ agency });
     } catch (err) {
         return next(err);
@@ -27,7 +27,7 @@ router.get("/:ORI", async function (req, res, next) {
 });
 
 
-/** GET /state/[state] => [{ ORI, name, lat, lng, counties, state }, ...]
+/** GET /state/[state] => [{ ori, name, lat, lng, counties, state }, ...]
  * Retrieves a list of agency objects from given 2-character state abbreviation
  */
 
@@ -45,7 +45,7 @@ router.get("/state/:state", async function (req, res, next) {
 /** POST agencyObjectData => boolean 
  * 
  *  Saves a new agency to the database. agencyObjectData should be of form:
- *  { ORI, name, lat, lng, counties, state }
+ *  { ori, name, lat, lng, counties, state }
 */
 
 router.post("/", async function (req, res, next) {

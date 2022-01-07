@@ -19,29 +19,19 @@ const FBI_KEY = process.env.REACT_APP_FBI_KEY;
 
 class FBIAPI {
 
-    static async request(endpoint, data = {}, method = "get") {
+    static async request(endpoint) {
 
-        const url = `${BASE_URL}/${endpoint}/`;
-        const headers = {
-            "X-Api-Key": FBI_KEY,
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "https://groundscore.vercel.app/",
-            "Access-Control-Request-Method": "GET",
-            "Access-Control-Request-Headers": "X-Api-Key, Content-Type",
-            "Access-Control-Allow-Credentials": "true"
-        };
-        const params = (method === "get")
-            ? data
-            : {};
+        const url = `${BASE_URL}/${endpoint}?API_KEY=${FBI_KEY}`;
+
 
         try {
-            let res = (await axios({ url, method, data, params, headers })).data;
+            let res = (await axios({ url, method: "get" })).data;
             console.log(res);
             return res;
         } catch (err) {
             console.error("FBI API Error:", err);
-            // let message = err.data.error.message;
-            // throw Array.isArray(message) ? message : [message];
+            let message = err.data.error.message;
+            throw Array.isArray(message) ? message : [message];
         }
     };
 
@@ -57,9 +47,9 @@ class FBIAPI {
 
     // Get crimes from agency between given year range (inclusive bounds) 
 
-    static async getCrimesFromORI({ ORI, startYear, endYear }) {
+    static async getCrimesFromOri({ ori, startYear, endYear }) {
 
-        let res = await this.request(`summarized/agencies/${ORI}/offenses/${startYear}/${endYear}`);
+        let res = await this.request(`summarized/agencies/${ori}/offenses/${startYear}/${endYear}`);
         return res.results;
     };
 

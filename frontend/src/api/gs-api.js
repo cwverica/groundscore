@@ -142,15 +142,15 @@ class GroundScoreApi {
 
     // Crime related routes
 
-    /** Retrieves data for each crime type from ORI by year */
+    /** Retrieves data for each crime type from ori by year */
 
-    static async getORICrimeDataByYear(ORI, recordYear) {
-        let res = await this.request(`crimes/${ORI}/${recordYear}`);
+    static async getOriCrimeDataByYear(ori, recordYear) {
+        let res = await this.request(`crimes/${ori}/${recordYear}`);
         return res.records;
     };
 
     /** Creates new crime object in database based on supplied data.
-     *  data: { ORI, recordYear, offense, actualCases, clearedCases }
+     *  data: { ori, recordYear, offense, actualCases, clearedCases }
      */
 
     static async createNewCrime(data) {
@@ -183,10 +183,10 @@ class GroundScoreApi {
         return res.agencies;
     };
 
-    /** Get an agency object from ORI */
+    /** Get an agency object from ori */
 
-    static async getAgencyByORI(ORI) {
-        let res = await this.request(`agencies/${ORI}`);
+    static async getAgencyByOri(ori) {
+        let res = await this.request(`agencies/${ori}`);
         return res.agency;
     }
 

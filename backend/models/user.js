@@ -149,7 +149,7 @@ class User {
      *   Right now, returns just user data, and all other pieces can be found
      *   on appropriate classes
      *  unused calls adds onto user: {..., searches, posts, comments}
-     * where searches is [{ searchId, locationId, closestORI, comments }, ...]
+     * where searches is [{ searchId, locationId, closestori, comments }, ...]
      *        and posts is [{ postId, locationId, createdAt, subject (optional), body}, ...]
      *     and comments is [{ commentId, referenceId, createdAt, body}, ...]
      **/
@@ -172,7 +172,7 @@ class User {
         // const savedSearchesRes = await db.query(
         //     `SELECT s.id as "searchId",
         //             s.location_id AS "locationId",
-        //             s.closest_ori AS "closestORI",
+        //             s.closest_ori AS "closestori",
         //             s.comments
         //      FROM Saved_Searches as s
         //      WHERE s.username = $1`,

@@ -47,7 +47,7 @@ router.get("/byuser/:username", ensureCorrectUserOrAdmin, async function (req, r
 });
 
 
-/** POST /[username]  { locationId, title, closestORI, userComments } => 
+/** POST /[username]  { locationId, title, closestori, userComments } => 
  *
  * Returns {"saved": searchId}
  *

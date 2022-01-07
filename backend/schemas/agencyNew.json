@@ -3,7 +3,7 @@
     "$id": "http://our.company.com/agencyNew.schema.json",
     "type": "object",
     "properties": {
-        "ORI": {
+        "ori": {
             "type": "string",
             "maxLength": 9,
             "minLength": 9
@@ -80,7 +80,7 @@
     },
     "additionalProperties": false,
     "required": [
-        "ORI",
+        "ori",
         "name",
         "lat",
         "lng",

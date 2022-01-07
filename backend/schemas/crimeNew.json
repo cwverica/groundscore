@@ -3,7 +3,7 @@
   "$id": "http://our.company.com/crimeNew.schema.json",
   "type": "object",
   "properties": {
-    "ORI": {
+    "ori": {
       "type": "string",
       "maxLength": 9,
       "minLength": 9
@@ -21,7 +21,7 @@
         "burglary",
         "homicide",
         "human-trafficing",
-        "larcey",
+        "larceny",
         "motor-vehicle-theft",
         "property-crime",
         "rape",
@@ -41,7 +41,7 @@
   },
   "additionalProperties": false,
   "required": [
-    "ORI",
+    "ori",
     "recordYear",
     "offense",
     "actualCases",

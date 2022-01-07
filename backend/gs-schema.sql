@@ -45,7 +45,7 @@ CREATE TABLE Comments (
 );
 
 CREATE TABLE Reporting_Agencies (
-  ORI CHAR(9) UNIQUE PRIMARY KEY,
+  ori CHAR(9) UNIQUE PRIMARY KEY,
   name TEXT NOT NULL,
   lat float8 NOT NULL,
   lng float8 NOT NULL,
@@ -54,12 +54,13 @@ CREATE TABLE Reporting_Agencies (
 );
 
 CREATE TABLE Crimes (
-  ORI CHAR(9) NOT NULL
+  ori CHAR(9) NOT NULL
     REFERENCES Reporting_Agencies,
   record_year INTEGER NOT NULL,
   offense TEXT NOT NULL,
   actual_cases INTEGER NOT NULL,
-  cleared_cases INTEGER NOT NULL
+  cleared_cases INTEGER NOT NULL,
+  PRIMARY KEY(ori, record_year, offense)
 );
 
 CREATE TABLE Saved_Searches (

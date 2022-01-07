@@ -6,9 +6,9 @@ import App from './App';
 require('bootstrap');
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <App />,
+  // </React.StrictMode>,
   document.getElementById('root')
 );
 

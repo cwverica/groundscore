@@ -25,7 +25,6 @@ function Search() {
         if (search.id === "temp") {
             const location = await CacheLayer.getOrCreateLocation(search);
             const agencyList = await CacheLayer.getAgenciesByState(location.state);
-            console.log(agencyList);
             agencyList.sort((agency1, agency2) => {
                 function calculateDistance(x1, y1, x2, y2) {
                     return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
@@ -38,12 +37,20 @@ function Search() {
             agency = agencyList[0];
 
         } else {
-            agency = await GroundScoreApi.getAgencyByORI(search.closestOri);
+            agency = await GroundScoreApi.getAgencyByOri(search.closestOri);
         }
-        const crimes = await CacheLayer.getCrimesByORIAndYears(agency.ORI, STARTYEAR, ENDYEAR);
+        const crimes = await CacheLayer.getCrimesByOriAndYears(agency.ori, STARTYEAR, ENDYEAR);
 
-        setCrimeData(crimes);
-        setStatus("ready");
+        for (let i = 2016; i <= 2020; i++) {
+            console.log(`********${i}*********`);
+            console.log(crimes[i]);
+            // crimes[i].map(async (crime) => {
+            //     console.log("crime:");
+            //     console.log(crime);
+            // });
+        }
+        // setCrimeData(crimes);
+        // setStatus("ready");
     }
 
     return (
@@ -60,7 +67,9 @@ function Search() {
                 {status === "ready" && (
                     <ul>
                         {crimeData.map(async (crime) => {
-                            return <li>{await crime}</li>
+                            console.log("crime:");
+                            console.log(crime);
+                            // return <li>{await crime}</li>
                         })}
                     </ul>
                 )

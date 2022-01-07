@@ -74,18 +74,18 @@ class Search {
 
 
     /** Save search: creates a new saved_search
-     *   { username, title, locationId, closestORI, userComments } => { id, title}.
+     *   { username, title, locationId, closestori, userComments } => { id, title}.
      * 
      *  Be sure to verify that username exists
      *
      * - username: username that is saving the search
      * - locationId: the id of the location
      * - title: a brief title for the search
-     * - closestORI: ORI of the closest reporting agency
+     * - closestori: ori of the closest reporting agency
      * - userComments: users comments about search results. (optional)
      **/
 
-    static async save({ title, locationId, closestORI, username, userComments = '' }) {
+    static async save({ title, locationId, closestOri, username, userComments = '' }) {
 
         let result = await db.query(
             `SELECT id
@@ -98,14 +98,14 @@ class Search {
         if (!location) throw new NotFoundError(`No location found with id: ${locationId}`);
 
         result = await db.query(
-            `SELECT ORI
+            `SELECT ori
              FROM Reporting_Agencies
-             WHERE ORI = $1`,
-            [closestORI],
+             WHERE ori = $1`,
+            [closestori],
         );
-        const ORI = result.rows[0];
+        const ori = result.rows[0];
 
-        if (!ORI) throw new NotFoundError(`No agency found with ORI: ${closestORI}`)
+        if (!ori) throw new NotFoundError(`No agency found with ori: ${closestOri}`)
 
         let save = await db.query(
             `INSERT INTO Saved_Searches 
@@ -116,7 +116,7 @@ class Search {
                  user_comments)
              VALUES ($1, $2, $3, $4, $5)
              RETURNING id, title`,
-            [username, title, locationId, closestORI, userComments]);
+            [username, title, locationId, closestOri, userComments]);
 
         return save.rows[0];
     };

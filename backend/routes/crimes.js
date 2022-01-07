@@ -12,7 +12,7 @@ const crimeNewSchema = require("../schemas/crimeNew.json");
 const router = express.Router();
 
 
-/** GET /[ORI]/[recordYear] => [{ORI, recordYear, offense, actualCases, clearedCases}, ...]
+/** GET /[ori]/[recordYear] => [{ori, recordYear, offense, actualCases, clearedCases}, ...]
  * Retrieves an array of records. Will be length 12 - one for each type of offense.
  * 
  * Included offenses are (by used title in alphabetical order): 
@@ -20,10 +20,10 @@ const router = express.Router();
  *      motor-vehicle-theft, property-crime, rape, rape-legacy, robbery, violent-crime
 */
 
-router.get("/:ORI/:recordYear", async function (req, res, next) {
+router.get("/:ori/:recordYear", async function (req, res, next) {
     try {
-        const { ORI, recordYear } = req.params;
-        const records = await Crime.getByYear({ ORI, recordYear });
+        const { ori, recordYear } = req.params;
+        const records = await Crime.getByYear({ ori, recordYear });
         return res.json({ records });
     } catch (err) {
         return next(err);
@@ -34,7 +34,7 @@ router.get("/:ORI/:recordYear", async function (req, res, next) {
 /** POST crimeObjectData => boolean 
  * 
  *  Saves a new crime to the database. crimeObjectData should be of form:
- *  { ORI, recordYear, offense, actualCases, clearedCases }
+ *  { ori, recordYear, offense, actualCases, clearedCases }
  *  record year must be after 1950, actualCases and clearedCases cannot be negative 
  *  offense must be one of the 12 standard types:
  *      aggravated-assault, arson, burglary, homicide, human-trafficing, larcey.

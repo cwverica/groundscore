@@ -12,7 +12,7 @@
       "type": "string",
       "maxLength": 50
     },
-    "closestORI": {
+    "closestOri": {
       "type": "string",
       "minLength": 9,
       "maxLength": 9
@@ -29,6 +29,6 @@
   "required": [
     "username",
     "locationId",
-    "closestORI"
+    "closestOri"
   ]
 }
