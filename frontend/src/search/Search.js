@@ -15,8 +15,6 @@ function Search() {
     const [search, setSearch] = useState({});
     const [crimeData, setCrimeData] = useState({});
 
-
-
     return (
         <div id="main-container">
             <div id="map-container">

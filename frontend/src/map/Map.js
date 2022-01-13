@@ -5,6 +5,8 @@ import React, {
     useCallback,
     useContext
 } from "react";
+// import Compass from '../static/images/navigationcompass.svg';
+// import MagnifyingGlass from '../static/images/magnifyingglass.svg';
 import {
     GoogleMap,
     useLoadScript,
@@ -53,7 +55,9 @@ const options = {
 
 
 
-function Locate({ panTo }) {
+function Locate({
+    panTo
+}) {
     return (
         <button className="compass"
             onClick={() => {
@@ -67,14 +71,17 @@ function Locate({ panTo }) {
                     () => null);
             }}>
             <img
-                src="../static/images/navigationcompass.svg"
+                src='../static/images/navigationcompass.svg'
                 alt="compass - Locate me" />
         </button>
     )
 };
 
 
-function SearchBox({ panTo, setSelected }) {
+function SearchBox({
+    panTo,
+    setSelected
+}) {
     const kilometers200InMeters = 200 * 1000;
 
     const {
@@ -93,32 +100,46 @@ function SearchBox({ panTo, setSelected }) {
         }
     }); // TODO: update to user lat/lng from browser?
 
+
+
     return (
         <div className="searchBox">
-            <Combobox onSelect={async (address) => {
-                setValue(address, false);
-                clearSuggestions();
-                try {
-                    const results = await getGeocode({ address });
-                    const geocode = results[0];
+            <Combobox
+                onSelect={async (address) => {
+                    setValue(address, false);
+                    clearSuggestions();
+                    try {
+                        const results = await getGeocode({ address });
+                        const geocode = results[0];
 
-                    const city = geocode.address_components.filter((component) => {
-                        return component.types.includes("locality")
-                    })[0].long_name;
-                    const county = geocode.address_components.filter((component) => {
-                        return component.types.includes("administrative_area_level_2")
-                    })[0].long_name.split(" ").slice(0, -1).join(" ").trim();
-                    const state = geocode.address_components.filter((component) => {
-                        return component.types.includes("administrative_area_level_1")
-                    })[0].short_name;
-                    const { lat, lng } = await getLatLng(geocode);
+                        const city = geocode.address_components.filter((component) => {
+                            return component.types.includes("locality")
+                        })[0].long_name;
 
-                    panTo({ lat, lng });
-                    setSelected({ id: "temp", title: "New Search", lat, lng, state, city, county })
-                } catch (err) {
-                    console.log(`error!: ${err}`);
-                }
-            }}>
+                        const county = geocode.address_components.filter((component) => {
+                            return component.types.includes("administrative_area_level_2")
+                        })[0].long_name.split(" ").slice(0, -1).join(" ").trim();
+
+                        const state = geocode.address_components.filter((component) => {
+                            return component.types.includes("administrative_area_level_1")
+                        })[0].short_name;
+
+                        const { lat, lng } = await getLatLng(geocode);
+
+                        panTo({ lat, lng });
+                        setSelected({
+                            id: "temp",
+                            title: "New Search",
+                            lat,
+                            lng,
+                            state,
+                            city,
+                            county
+                        })
+                    } catch (err) {
+                        console.log(`error!: ${err}`);
+                    }
+                }}>
                 <ComboboxInput
                     value={value}
                     onChange={(e) => {
@@ -130,11 +151,18 @@ function SearchBox({ panTo, setSelected }) {
                 />
                 <ComboboxPopover>
                     <ComboboxList>
-                        {status === "OK" && data.map(({ id, description }) => (
-                            <ComboboxOption key={id} value={description} />
-                        ))}
-                        {status === "ZERO_RESULTS" && <ComboboxOption value={"No results found"} />}
-                        {status === "NOT_FOUND" && <ComboboxOption value={"Does not exist (according to google)"} />}
+                        {status === "OK" &&
+                            data.map(({ id, description }) => (
+                                <ComboboxOption
+                                    key={id}
+                                    value={description} />
+                            ))}
+                        {status === "ZERO_RESULTS" &&
+                            <ComboboxOption
+                                value={"No results found"} />}
+                        {status === "NOT_FOUND" &&
+                            <ComboboxOption
+                                value={"Does not exist (according to google)"} />}
                     </ComboboxList>
                 </ComboboxPopover>
             </Combobox>
@@ -143,7 +171,10 @@ function SearchBox({ panTo, setSelected }) {
 };
 
 
-function Map({ setStatus, setSearch }) {
+function Map({
+    setStatus,
+    setSearch
+}) {
 
     const { currentUser } = useContext(UserContext);
     const savedSearches = currentUser ? currentUser.searches : null;
@@ -170,7 +201,11 @@ function Map({ setStatus, setSearch }) {
 
 
     return <div className="map-container">
-        <SearchBox panTo={panTo} setSelected={setSelected} /><Locate panTo={panTo} />
+        <SearchBox
+            panTo={panTo}
+            setSelected={setSelected} />
+        <Locate
+            panTo={panTo} />
         <GoogleMap
             mapContainerStyle={mapContainerStyle}
             zoom={5}
@@ -178,6 +213,7 @@ function Map({ setStatus, setSearch }) {
             options={options}
             onLoad={onMapLoad}
             onClick={async (event) => {
+                setSelected(null);
                 const lat = event.latLng.lat();
                 const lng = event.latLng.lng();
                 const url = `${GOOGLE_BASE}geocode/json?latlng=${lat},${lng}&key=${GOOGLE_KEY}`
@@ -188,44 +224,68 @@ function Map({ setStatus, setSearch }) {
                     const city = geocode.address_components.filter((component) => {
                         return component.types.includes("locality")
                     })[0].long_name;
+
                     const county = geocode.address_components.filter((component) => {
                         return component.types.includes("administrative_area_level_2")
                     })[0].long_name.split(" ").slice(0, -1).join(" ").trim();
+
                     const state = geocode.address_components.filter((component) => {
                         return component.types.includes("administrative_area_level_1")
                     })[0].short_name;
 
-                    setSelected({ id: "temp", title: "New Click", lat, lng, city, county, state });
+                    setSelected({
+                        id: "temp",
+                        title: "New Click",
+                        lat,
+                        lng,
+                        city,
+                        county,
+                        state
+                    });
                 } catch (err) {
                     console.log(err);
                 }
             }}>
 
-            {savedSearches.length > 0 && savedSearches.map((search) => {
-                return (<Marker
-                    key={search.id}
-                    position={{ lat: search.lat, lng: search.lng }}
-                    icon={{
-                        url: "../static/images/magnifyingglass.svg",
-                        scaledSize: new window.google.maps.Size(12, 12),
-                        origin: new window.google.maps.Point(0, 0),
-                        anchor: new window.google.maps.Point(6, 6),
-                    }}
-                    onClick={() => { setSelected(search) }}
-                />);
-            })}
+            {savedSearches.length > 0 &&
+                savedSearches.map((search) => {
+                    return (<Marker
+                        key={search.id}
+                        position={{
+                            lat: search.lat,
+                            lng: search.lng
+                        }}
+                        icon={{
+                            url: '../static/images/magnifyingglass.svg',
+                            scaledSize: new window.google.maps.Size(12, 12),
+                            origin: new window.google.maps.Point(0, 0),
+                            anchor: new window.google.maps.Point(6, 6),
+                        }}
+                        onClick={() => { setSelected(search) }}
+                    />);
+                })}
 
-            {selected ? (<InfoWindow
-                position={{ lat: selected.lat, lng: selected.lng }}
-                onCloseClick={() => { setSelected(null) }}>
-                <div>
-                    <h2>{selected.title}</h2>
-                    <p><button onClick={() => {
-                        setSearch(selected);
-                        setStatus("loading");
-                    }}>{`Return results for ${selected.city}, ${selected.state}.`}</button></p>
-                </div>
-            </InfoWindow>) : null}
+            {selected &&
+                (<InfoWindow
+                    position={{
+                        lat: selected.lat,
+                        lng: selected.lng
+                    }}
+                    onCloseClick={() => { setSelected(null) }}>
+                    <div>
+                        <h2>
+                            {selected.title}
+                        </h2>
+                        <p>
+                            <button onClick={() => {
+                                setSearch(selected);
+                                setStatus("loading");
+                            }}>{`Return results for ${selected.city}, ${selected.state}.`}
+                            </button>
+                        </p>
+                    </div>
+                </InfoWindow>)
+            }
         </GoogleMap>
     </div >
 
