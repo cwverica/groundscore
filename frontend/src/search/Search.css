@@ -7,10 +7,10 @@
 
 #map-container {
     order: 1;
-    flex-grow: 3;
+    flex-grow: 1;
 }
 
 #data-container {
     order: 2;
-    flex-grow: 2;
+    flex-grow: 1;
 }

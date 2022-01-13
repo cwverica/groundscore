@@ -34,8 +34,8 @@ const GOOGLE_BASE = "https://maps.googleapis.com/maps/api/";
 
 const libraries = ["places"];
 const mapContainerStyle = {
-    width: "69.5vw",
-    height: "91.2vh"
+    width: "40vw",
+    height: "95vh"
 };
 const center = {
     lat: 38.090000,
