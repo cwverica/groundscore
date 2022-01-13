@@ -194,7 +194,7 @@ function Data({
                             }
                         }}
                         config={{
-                            displayModeBar: false
+                            staticPlot: true
                         }}
                     />
                 );
