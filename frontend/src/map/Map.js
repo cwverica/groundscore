@@ -5,8 +5,8 @@ import React, {
     useCallback,
     useContext
 } from "react";
-// import Compass from '../static/images/navigationcompass.svg';
-// import MagnifyingGlass from '../static/images/magnifyingglass.svg';
+import { default as compass } from '../static/images/navigationcompass.svg';
+import { default as magnifyingGlass } from '../static/images/magnifyingglass.svg';
 import {
     GoogleMap,
     useLoadScript,
@@ -47,7 +47,6 @@ const options = {
     styles,
     mapTypeControl: true,
     mapTypeControlOptions: {
-        // style: window.google.maps.MapTypeControlStyle.DROPDOWN_MENU,
         mapTypeIds: ["roadmap", "terrain"],
     },
     fullscreenControl: false
@@ -59,7 +58,8 @@ function Locate({
     panTo
 }) {
     return (
-        <button className="compass"
+        <button
+            className="compass"
             onClick={() => {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -71,7 +71,9 @@ function Locate({
                     () => null);
             }}>
             <img
-                src='../static/images/navigationcompass.svg'
+                src={compass}
+                data-toggle="tooltip"
+                title="Locate me"
                 alt="compass - Locate me" />
         </button>
     )
@@ -256,7 +258,7 @@ function Map({
                             lng: search.lng
                         }}
                         icon={{
-                            url: '../static/images/magnifyingglass.svg',
+                            url: { magnifyingGlass },
                             scaledSize: new window.google.maps.Size(12, 12),
                             origin: new window.google.maps.Point(0, 0),
                             anchor: new window.google.maps.Point(6, 6),

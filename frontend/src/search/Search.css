@@ -3,6 +3,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: stretch;
+    max-height: calc(100vh - 50px);
 }
 
 #map-container {
@@ -13,4 +14,6 @@
 #data-container {
     order: 2;
     flex-grow: 1;
+    overflow-x: scroll;
+    overflow-y: auto;
 }
