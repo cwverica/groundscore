@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import Plot from 'react-plotly.js';
 
 import GroundScoreApi from '../api/gs-api';
@@ -260,8 +259,7 @@ function Data({
                             : In 2013, the FBI started collecting rape data under a
                             revised definition and removed “forcible” from the offense
                             name. Legacy refers to crimes catalogued under the old
-                            definition. Whichever definition an agency uses to report,
-                            the FBI estimates the other via a complex calculation.
+                            definition.
                         </li>
                     </ul>
                 </div>

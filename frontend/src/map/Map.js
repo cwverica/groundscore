@@ -127,7 +127,7 @@ function SearchBox({
                         })[0].short_name;
 
                         const { lat, lng } = await getLatLng(geocode);
-
+                        console.log(`lat: ${lat}, lng: ${lng}, state: ${state}, city: ${city}, county: ${county}`);
                         panTo({ lat, lng });
                         setSelected({
                             id: "temp",
@@ -175,7 +175,9 @@ function SearchBox({
 
 function Map({
     setStatus,
-    setSearch
+    setSearch,
+    setSelected,
+    selected
 }) {
 
     const { currentUser } = useContext(UserContext);
@@ -186,7 +188,8 @@ function Map({
         libraries,
     });
 
-    const [selected, setSelected] = useState(null);
+
+
 
     const mapRef = useRef();
     const onMapLoad = useCallback((map) => {
