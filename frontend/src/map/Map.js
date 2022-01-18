@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, {
-    useState,
     useRef,
     useCallback,
     useContext
@@ -26,7 +25,7 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 
-import UserContext from "../auth/UserContext";
+import UserContext from "../context/UserContext";
 import styles from "./mapStyles";
 import "./Map.css";
 

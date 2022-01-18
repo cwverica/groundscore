@@ -195,6 +195,7 @@ function Data({
                         config={{
                             staticPlot: true
                         }}
+                        key={data.displayTitle}
                     />
                 );
             })

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
-import UserContext from "../auth/UserContext";
+import UserContext from "../context/UserContext";
 import './Navbar.css';
 
 /**  Navigation bar that shows up on every page.

@@ -3,7 +3,8 @@ import { BrowserRouter } from 'react-router-dom';
 import jwt from "jsonwebtoken";
 
 import GroundScoreApi from './api/gs-api';
-import UserContext from './auth/UserContext';
+import UserContext from './context/UserContext';
+import SearchContext from './context/SearchContext';
 import useLocalStorage from './customHooks/useLocalStorage';
 import NavBar from './routes/NavBar';
 import AppRoutes from './routes/AppRoutes';
@@ -20,6 +21,9 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useLocalStorage(TOKEN_STORAGE_ID);
   const [searches, setSearches] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [status, setStatus] = useState("empty")
+  const [search, setSearch] = useState({});
 
 
   /** A function used in development to test things, once useless, delete */
@@ -108,12 +112,15 @@ function App() {
     <BrowserRouter>
       <UserContext.Provider
         value={{ currentUser, setCurrentUser, searches }}>
-        <div className="App">
-          <NavBar logout={logout} />
-          <AppRoutes login={login} signup={signup} />
-        </div>
+        <SearchContext.Provider
+          value={{ selected, setSelected, search, setSearch, status, setStatus }} >
+          <div className="App">
+            <NavBar logout={logout} />
+            <AppRoutes login={login} signup={signup} />
+          </div>
+        </SearchContext.Provider>
       </UserContext.Provider>
-    </BrowserRouter>
+    </BrowserRouter >
   );
 }
 

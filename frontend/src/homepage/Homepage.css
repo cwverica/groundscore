@@ -1,10 +1,15 @@
 .Homepage {
     /* put around the vertical center of page */
-    height: calc(100vh - 150px);
+    height: calc(100vh - 100px);
     display: flex;
     align-items: center;
   }
+
+.container {
+  text-align: left;
+}
+
   
-  .btn {
-    margin: 2px 5px;
-  }
+.btn {
+  margin: 2px 5px;
+}

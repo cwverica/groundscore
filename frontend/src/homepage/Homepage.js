@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../auth/UserContext";
+import UserContext from "../context/UserContext";
 
 import './Homepage.css';
 
@@ -45,50 +45,51 @@ function Homepage() {
                     Let's search some neighborhoods!
                 </Link>
             </div>
-            <div className="container text-center">
-                <div className="font-weight-bold">
+            <div className="container">
+                <h3 className="font-weight-bold">
                     What is&nbsp;
                     <u>
                         GroundScore?
                     </u>
+                </h3>
+                <div className="container text-left">
+                    GroundScore is an application to that helps people
+                    make a more informed decision about where they're
+                    going to live.
+                    <hr />
+                    Everyone can look at a map and see how close a house is
+                    to their favorite restaurant, the best museums, or the
+                    city park. Many maps will even tell you the terrain,
+                    public transit, commute times. There already exists plenty
+                    of platforms that can give you a home's value.
+                    <br />
+                    <br />
+                    So what's missing?
+                    <br />
+                    <br />
+                    <h3>
+                        Safety.
+                    </h3>
+                    <br />
+                    <br />
+                    No maps show you the how safe an area is, or what it's crime is like.
+                    <br />
+                    <br />
+                    Enter GroundScore. We use data aggregated from over 14000
+                    local law enforcement agencies to display the crime for the
+                    area surrounding a given address. This is one of the most
+                    crucial pieces of information to round out the picture of what
+                    life in a given area looks like, but is somehow ignored
+                    by most applications, companies, and people. That ends now.
+                    <br />
+                    <br />
+                    How safe is your neighborhood? Take GroundScore for a spin.
+                    Start off by clicking the compass in the upper right corner
+                    of the map to search around your current neighborhood. Then,
+                    look around to see how other areas of the country look...
+                    <br />
+                    <br />
                 </div>
-                <br />
-                <br />
-                GroundScore is an application to that helps people
-                make a more informed decision about where their
-                going to live.
-                <br />
-                Everyone can look at a map and see how close a house is
-                to their favorite restaurant, the best museums, or the
-                city park. Many maps will even tell you the terrain,
-                public transit, commute times. There already exists plenty
-                of platforms that can give you a home's value.
-                <br />
-                <hr />
-                So what's missing?
-                <br />
-                <br />
-                Safety.
-                <br />
-                <br />
-                <br />
-                No maps show you the relative safety of an area.
-                <br />
-                <br />
-                Enter GroundScore. We use data aggregated from over 14000
-                local law enforcement agencies to display the crime for the
-                area surrounding a given address. This is one of the most
-                crucial pieces of information to round out the picture of what
-                life in a given area looks like, but is somehow ignored
-                by most applications, companies, and people. That ends now.
-                <br />
-                <br />
-                How safe is your neighborhood? Take GroundScore for a spin.
-                Start off by clicking the compass in the upper right corner
-                of the map. Then, look around to see how other areas of the
-                country look...
-                <br />
-                <br />
 
                 <Link
                     className="btn btn-primary font-weight-bold mr-3"

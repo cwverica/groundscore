@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import UserContext from "../auth/UserContext";
+import UserContext from "../context/UserContext";
 
 /** 
  * In routing component, use these instead of <Route>. 

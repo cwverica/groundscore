@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import Alert from "../common/Alert";
 import GroundScoreApi from "../api/gs-api";
-import UserContext from "../auth/UserContext";
+import UserContext from "../context/UserContext";
 
 /** Profile editing form.
  * Allows a user to edit their info, is verified by entering password.

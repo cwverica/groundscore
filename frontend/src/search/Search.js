@@ -1,18 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useContext } from 'react';
 
 import Map from "../map/Map";
 import Data from "../data/Data";
+import SearchContext from "../context/SearchContext";
 
 import "./Search.css"
 
 
 
 
-function Search({ selected, setSelected }) {
+function Search() {
 
+    const {
+        selected,
+        setSelected,
+        search,
+        setSearch,
+        status,
+        setStatus
+    } = useContext(SearchContext)
 
-    const [status, setStatus] = useState("empty")
-    const [search, setSearch] = useState({});
     const [crimeData, setCrimeData] = useState({});
 
 
