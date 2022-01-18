@@ -20,9 +20,7 @@ const FBI_KEY = process.env.REACT_APP_FBI_KEY;
 class FBIAPI {
 
     static async request(endpoint) {
-
         const url = `${BASE_URL}/${endpoint}?API_KEY=${FBI_KEY}`;
-
 
         try {
             let res = (await axios({ url, method: "get" })).data;

@@ -121,6 +121,27 @@ function Data({
 
     }
 
+    // async function toggleUserFavorite(storyId) {
+    //     let method = "POST";
+    //     if (this.isUserFavorite(storyId)) {
+    //         method = "DELETE";
+    //     }
+    //     try {
+    //         await axios({
+    //             url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
+    //             method: `${method}`,
+    //             params: { "token": this.loginToken },
+    //         });
+
+    //     }
+    //     catch (e) {
+    //         console.error(`Toggle favorite failed`, e);
+    //     }
+
+    //     currentUser = await User.updateUser();
+    // }
+
+
     function createContent() {
         if (status === "empty") {
             return (

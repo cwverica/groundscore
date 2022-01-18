@@ -15,7 +15,7 @@ class GroundScoreApi {
     static token;  // the token for interacting with the API will be stored here.
 
     static async request(endpoint, data = {}, method = "get") {
-        console.debug("API Call:", endpoint, data, method);
+        // console.debug("API Call:", endpoint, data, method);
 
         const url = `${BASE_URL}/${endpoint}`;
         const headers = { Authorization: `Bearer ${GroundScoreApi.token}` };
@@ -127,6 +127,12 @@ class GroundScoreApi {
         return res.searches;
     }
 
+    /** saves a new search for supplied username */
+
+    static async saveSearch(username, data) {
+        let res = await this.request(`searches/${username}`, data, "post");
+        return res.searches;
+    }
 
 
 

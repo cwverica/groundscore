@@ -26,8 +26,8 @@ function Navbar({ logout }) {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                    <Dropdown.Item href="/mysearches">Saved Searches</Dropdown.Item>
-                    <Dropdown.Divider />
+                    {/* <Dropdown.Item href="/mysearches">Saved Searches</Dropdown.Item>
+                    <Dropdown.Divider /> */}
                     <Dropdown.Item href="/profile">View Profile</Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
@@ -58,6 +58,17 @@ function Navbar({ logout }) {
                 GroundScore
             </Link>
 
+            <Link
+                className="btn btn-primary font-weight-bold mr-3"
+                to='/search'>
+                To Search Page
+            </Link>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
             <div className="user-button">
                 {currentUser ? loggedInNav() : loggedOutNav()}
             </div>
