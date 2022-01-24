@@ -17,14 +17,16 @@ class CacheLayer {
 
         let location;
         try {
-            const id = await GroundScoreApi.getLocationByLatLng(search);
+            location = await GroundScoreApi.getLocationByLatLng(search);
 
             if (!location) {
+                console.log("no ID found: ", location)
                 location = await GroundScoreApi.createNewLocation(search);
             } else {
-                location = await GroundScoreApi.getLocationById(id);
+                console.log("ID found: ", location)
+                location = await GroundScoreApi.getLocationById(location.id);
             }
-
+            console.log(location);
             return location;
         } catch (err) {
             console.log(err);

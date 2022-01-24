@@ -1,7 +1,11 @@
+
 import Plot from 'react-plotly.js';
 
 import GroundScoreApi from '../api/gs-api';
 import CacheLayer from '../api/cache-layer';
+import calculateDistance from '../common/helpers';
+import StaticModal from "./StaticModal";
+
 import "./Data.css";
 
 // Set as constants for now, maybe later could be user input
@@ -39,14 +43,13 @@ const crimeDisplayTitles = {
 };
 
 
-
-
 function Data({
     setStatus,
     status,
     setCrimeData,
     crimeData,
-    search
+    search,
+    setSearch
 }) {
 
     async function loadData(search) {
@@ -65,16 +68,6 @@ function Data({
             const location = await CacheLayer.getOrCreateLocation(search);
             const agencyList = await CacheLayer.getAgenciesByState(location.state);
             agencyList.sort((agency1, agency2) => {
-                function calculateDistance(x1, y1, x2, y2) {
-                    return Math.sqrt(
-                        Math.pow(
-                            (x1 - x2), 2
-                        ) +
-                        Math.pow(
-                            (y1 - y2), 2
-                        )
-                    );
-                }
                 let distance1 = calculateDistance(
                     agency1.lat,
                     agency1.lng,
@@ -91,6 +84,15 @@ function Data({
                 return distance1 - distance2;
             });
             agency = agencyList[0];
+
+            setSearch((search) => {
+                return {
+                    ...search,
+                    closestOri: agency.ori,
+                    locationId: location.id
+                }
+            });
+            console.log(search);
 
         } else {
             agency = await GroundScoreApi.getAgencyByOri(search.closestOri);
@@ -120,26 +122,6 @@ function Data({
         setStatus("ready");
 
     }
-
-    // async function toggleUserFavorite(storyId) {
-    //     let method = "POST";
-    //     if (this.isUserFavorite(storyId)) {
-    //         method = "DELETE";
-    //     }
-    //     try {
-    //         await axios({
-    //             url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
-    //             method: `${method}`,
-    //             params: { "token": this.loginToken },
-    //         });
-
-    //     }
-    //     catch (e) {
-    //         console.error(`Toggle favorite failed`, e);
-    //     }
-
-    //     currentUser = await User.updateUser();
-    // }
 
 
     function createContent() {
@@ -223,7 +205,12 @@ function Data({
 
             const errors = crimeData.errorMessages || null;
             return (<div>
-                <h1>Crime for {search.city}, {search.state}</h1>
+                <h1
+                >Crime for {search.city}, {search.state}
+                    <StaticModal
+                        currentSearch={search}
+                    />
+                </h1>
                 <div className="notes">
                     A few notes:
                     <ul>

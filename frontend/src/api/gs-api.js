@@ -127,11 +127,26 @@ class GroundScoreApi {
         return res.searches;
     }
 
+    /** Checks to see if this is a search saved by the user */
+
+    static async userHasSaved(username, searchId) {
+        let res = await this.request(`searches/${searchId}`)
+        if (res.search.hasOwnProperty(username) && res.search.username === username) return true;
+        return false;
+    }
+
     /** saves a new search for supplied username */
 
     static async saveSearch(username, data) {
         let res = await this.request(`searches/${username}`, data, "post");
         return res.searches;
+    }
+
+    /** deletes a search of supplied id by username */
+
+    static async deleteSearch(username, id) {
+        let res = await this.request(`searches/${username}`, { id }, "delete");
+        return res.deleted;
     }
 
 

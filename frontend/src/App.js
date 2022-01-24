@@ -111,7 +111,7 @@ function App() {
   return (
     <BrowserRouter>
       <UserContext.Provider
-        value={{ currentUser, setCurrentUser, searches }}>
+        value={{ currentUser, setCurrentUser, searches, setSearches }}>
         <SearchContext.Provider
           value={{ selected, setSelected, search, setSearch, status, setStatus }} >
           <div className="App">

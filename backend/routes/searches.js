@@ -47,9 +47,9 @@ router.get("/byuser/:username", ensureCorrectUserOrAdmin, async function (req, r
 });
 
 
-/** POST /[username]  { locationId, title, closestori, userComments } => 
+/** POST /[username]  { username, locationId, title, closestori, userComments } => 
  *
- * Returns {"saved": searchId}
+ * Returns {"saved": searchId, "title": searchTitle}
  *
  * Authorization required: admin or same-user-as-:username
  * */
@@ -61,7 +61,6 @@ router.post("/:username", ensureCorrectUserOrAdmin, async function (req, res, ne
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs);
         }
-        req.body.username = req.params.username;
         const search = await Search.save(req.body);
         return res.status(201).json({ "saved": search.id, "title": search.title });
     } catch (err) {
@@ -97,15 +96,15 @@ router.patch("/:username", ensureCorrectUserOrAdmin, async function (req, res, n
 });
 
 
-/** DELETE /[id]  =>  { deleted: id }
+/** DELETE /[username] {id}  =>  { deleted: id }
  *
- * Authorization required: admin 
+ * Authorization required: admin or same-user-as-:username
  **/
 
-router.delete("/:id", ensureAdmin, async function (req, res, next) {
+router.delete("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
-        await Search.delete(req.params.id);
-        return res.json({ deleted: req.params.id });
+        await Search.delete(req.body.id);
+        return res.json({ deleted: req.body.id });
     } catch (err) {
         return next(err);
     }

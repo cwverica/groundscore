@@ -101,13 +101,13 @@ class Search {
             `SELECT ori
              FROM Reporting_Agencies
              WHERE ori = $1`,
-            [closestori],
+            [closestOri],
         );
         const ori = result.rows[0];
 
         if (!ori) throw new NotFoundError(`No agency found with ori: ${closestOri}`)
 
-        let save = await db.query(
+        let search = await db.query(
             `INSERT INTO Saved_Searches 
                 (username, 
                  title,
@@ -118,7 +118,7 @@ class Search {
              RETURNING id, title`,
             [username, title, locationId, closestOri, userComments]);
 
-        return save.rows[0];
+        return search.rows[0];
     };
 
 
@@ -157,11 +157,11 @@ class Search {
                                 created_at AS "createdAt", 
                                 user_comments AS "userComments"`;
         const result = await db.query(querySql, [...values, id, username]);
-        const post = result.rows[0];
+        const search = result.rows[0];
 
-        if (!post) throw new NotFoundError(`No post with id: ${id} from user: ${username}`);
+        if (!search) throw new NotFoundError(`No post with id: ${id} from user: ${username}`);
 
-        return post;
+        return search;
     };
 
 
@@ -175,9 +175,9 @@ class Search {
              RETURNING id`,
             [id],
         );
-        const post = result.rows[0];
+        const search = result.rows[0];
 
-        if (!post) throw new NotFoundError(`No post with id: ${id}`);
+        if (!search) throw new NotFoundError(`No search with id: ${id}`);
     };
 
 };

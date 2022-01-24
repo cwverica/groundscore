@@ -1,4 +1,7 @@
-import { useState, useContext } from 'react';
+import {
+    useState,
+    useContext
+} from 'react';
 
 import Map from "../map/Map";
 import Data from "../data/Data";
@@ -22,7 +25,6 @@ function Search() {
 
     const [crimeData, setCrimeData] = useState({});
 
-
     return (
         <div id="main-container">
             <div id="map-container">
@@ -39,7 +41,8 @@ function Search() {
                     status={status}
                     setCrimeData={setCrimeData}
                     crimeData={crimeData}
-                    search={search} />
+                    search={search}
+                    setSearch={setSearch} />
             </div>
 
         </div>

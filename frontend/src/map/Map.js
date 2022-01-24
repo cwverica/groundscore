@@ -2,10 +2,16 @@ import axios from "axios";
 import React, {
     useRef,
     useCallback,
-    useContext
+    useContext,
+    useEffect,
+    useReducer
 } from "react";
-import { default as compass } from '../static/images/navigationcompass.svg';
-import { default as magnifyingGlass } from '../static/images/magnifyingglass.svg';
+import {
+    default as compass
+} from '../static/images/navigationcompass.svg';
+// import {
+//     default as magnifyingGlass
+// } from '../static/images/magnifyingglass.svg';
 import {
     GoogleMap,
     useLoadScript,
@@ -126,7 +132,7 @@ function SearchBox({
                         })[0].short_name;
 
                         const { lat, lng } = await getLatLng(geocode);
-                        console.log(`lat: ${lat}, lng: ${lng}, state: ${state}, city: ${city}, county: ${county}`);
+
                         panTo({ lat, lng });
                         setSelected({
                             id: "temp",
@@ -148,7 +154,7 @@ function SearchBox({
                     }}
                     disabled={!ready}
                     placeholder="Enter an address"
-                    style={{ "text-align": "center" }}
+                    style={{ "textAlign": "center" }}
                 />
                 <ComboboxPopover>
                     <ComboboxList>
@@ -179,14 +185,20 @@ function Map({
     selected
 }) {
 
-    const { currentUser } = useContext(UserContext);
-    const savedSearches = currentUser ? currentUser.searches : null;
+    const { currentUser, searches } = useContext(UserContext);
+    const savedSearches = currentUser ? searches : null;
 
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: GOOGLE_KEY,
         libraries,
     });
 
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+
+    useEffect(function updateMap() {
+        forceUpdate();
+    }, [searches])
 
 
 
@@ -259,12 +271,12 @@ function Map({
                             lat: search.lat,
                             lng: search.lng
                         }}
-                        icon={{
-                            url: { magnifyingGlass },
-                            scaledSize: new window.google.maps.Size(12, 12),
-                            origin: new window.google.maps.Point(0, 0),
-                            anchor: new window.google.maps.Point(6, 6),
-                        }}
+                        // icon={{
+                        //     url: '../static/images/magnifyingglass.svg',
+                        //     scaledSize: new window.google.maps.Size(12, 12),
+                        //     origin: new window.google.maps.Point(0, 0),
+                        //     anchor: new window.google.maps.Point(6, 6),
+                        // }}
                         onClick={() => { setSelected(search) }}
                     />);
                 })}
@@ -277,9 +289,9 @@ function Map({
                     }}
                     onCloseClick={() => { setSelected(null) }}>
                     <div>
-                        <h2>
+                        <h4>
                             {selected.title}
-                        </h2>
+                        </h4>
                         <p>
                             <button onClick={() => {
                                 setSearch(selected);

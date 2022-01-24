@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import Alert from "../common/Alert";
 import GroundScoreApi from "../api/gs-api";
 import UserContext from "../context/UserContext";
