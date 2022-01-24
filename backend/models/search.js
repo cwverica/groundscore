@@ -43,7 +43,7 @@ class Search {
      * Get saved searches: takes a username and returns all of the searches
      * the user has saved.
      *  username => [{id, title, username, locationId, closestOri, createdAt, 
-     *  userComments, lat, lng, county, state }, ...]
+     *  userComments, lat, lng, city, county, state }, ...]
      */
 
     static async getAllByUser(username) {
@@ -58,6 +58,7 @@ class Search {
                     s.user_comments AS "userComments",
                     l.lat,
                     l.lng,
+                    l.city,
                     l.county,
                     l.state
             FROM Saved_Searches as s

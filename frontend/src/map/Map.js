@@ -296,7 +296,7 @@ function Map({
                             <button onClick={() => {
                                 setSearch(selected);
                                 setStatus("loading");
-                            }}>{`Return results for ${selected.city}, ${selected.state}.`}
+                            }}>{`Return results for ${selected.city || selected.county}, ${selected.state}.`}
                             </button>
                         </p>
                     </div>

@@ -20,13 +20,10 @@ class CacheLayer {
             location = await GroundScoreApi.getLocationByLatLng(search);
 
             if (!location) {
-                console.log("no ID found: ", location)
                 location = await GroundScoreApi.createNewLocation(search);
             } else {
-                console.log("ID found: ", location)
                 location = await GroundScoreApi.getLocationById(location.id);
             }
-            console.log(location);
             return location;
         } catch (err) {
             console.log(err);

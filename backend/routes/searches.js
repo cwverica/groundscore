@@ -30,7 +30,7 @@ router.get("/:id", async function (req, res, next) {
 
 /** Get /byUser/[username]  => 
  *      [{id, title, username, locationId, closestOri, createdAt, userComments,
- *          lat, lng, county, state}, ...]
+ *          lat, lng, city, county, state}, ...]
  * 
  *  Returns array of all saved searches by user.
  * 

@@ -26,8 +26,8 @@ function Navbar({ logout }) {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                    {/* <Dropdown.Item href="/mysearches">Saved Searches</Dropdown.Item>
-                    <Dropdown.Divider /> */}
+                    <Dropdown.Item href="/mysearches">Saved Searches</Dropdown.Item>
+                    <Dropdown.Divider />
                     <Dropdown.Item href="/profile">View Profile</Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>

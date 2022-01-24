@@ -11,19 +11,13 @@ import Button from 'react-bootstrap/Button'
 
 
 function StaticModal({ currentSearch }) {
-    console.log(currentSearch);
     const { currentUser, searches, setSearches } = useContext(UserContext);
 
 
     function isSearchSaved() {
         let saved = false;
-        console.log(searches);
         if (currentSearch.id !== "temp" &&
-            searches.some((search) => {
-                console.log(search);
-                console.log(currentSearch);
-                return search.id === currentSearch.id;
-            })) saved = true;
+            searches.some((search) => search.id === currentSearch.id)) saved = true;
 
         return saved;
     }
@@ -44,9 +38,8 @@ function StaticModal({ currentSearch }) {
     const handleShow = () => setShow(true);
     const handleSave = async () => {
         setFormErrors([]);
-        if (formData.title.length < 2) {
-            setFormErrors([...formErrors, "Title must be at least 2 characters"]);
-        }
+        if (formData.title.length < 2) setFormErrors(["Title must be at least 2 characters"]);
+
         const newSearch = {
             username: currentUser.username,
             title: formData.title,
@@ -56,11 +49,10 @@ function StaticModal({ currentSearch }) {
         }
 
         try {
-            const result = await GroundScoreApi.saveSearch(newSearch.username, newSearch);
-            console.log("attempted saved result:")
-            console.log(result);
+            await GroundScoreApi.saveSearch(newSearch.username, newSearch);
+            let newSearchList = await GroundScoreApi.getUserSearches(newSearch.username);
             setSaved(true);
-            setSearches((searches) => [...searches, newSearch]);
+            setSearches(newSearchList);
             setShow(false);
         } catch (e) {
             console.error("Did not save search: ", e)
@@ -77,8 +69,6 @@ function StaticModal({ currentSearch }) {
     async function toggleUserFavorite() {
         try {
             if (!saved) {
-                console.log(saved);
-                console.log(currentSearch);
                 handleShow();
             } else {
                 await GroundScoreApi.deleteSearch(currentUser.username, currentSearch.id);

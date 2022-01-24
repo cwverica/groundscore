@@ -24,7 +24,6 @@ class FBIAPI {
 
         try {
             let res = (await axios({ url, method: "get" })).data;
-            console.log(res);
             return res;
         } catch (err) {
             console.error("FBI API Error:", err);

@@ -53,7 +53,7 @@ function Data({
 }) {
 
     async function loadData(search) {
-        let agency;
+        let agency, closestOri, locationId;
         let newCrimeData = {};
         crimeList.forEach((crime) => {
             newCrimeData[crime] = {
@@ -84,18 +84,12 @@ function Data({
                 return distance1 - distance2;
             });
             agency = agencyList[0];
-
-            setSearch((search) => {
-                return {
-                    ...search,
-                    closestOri: agency.ori,
-                    locationId: location.id
-                }
-            });
-            console.log(search);
-
+            closestOri = agency.ori;
+            locationId = location.id;
         } else {
+            console.log(search);
             agency = await GroundScoreApi.getAgencyByOri(search.closestOri);
+            console.log(agency);
         }
         const crimes = await CacheLayer.getCrimesByOriAndYears(agency.ori, STARTYEAR, ENDYEAR);
 
@@ -120,6 +114,13 @@ function Data({
         }
         setCrimeData(newCrimeData);
         setStatus("ready");
+        setSearch((search) => {
+            return {
+                ...search,
+                closestOri,
+                locationId
+            }
+        });
 
     }
 

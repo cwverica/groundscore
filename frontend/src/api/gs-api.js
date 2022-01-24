@@ -33,9 +33,9 @@ class GroundScoreApi {
         }
     }
 
+
+
     //////// Individual API routes
-
-
 
 
     // User related routes
@@ -152,11 +152,12 @@ class GroundScoreApi {
 
 
     // Post related routes
-
+    // unused as of yet, but here's where they go
 
 
 
     // Comment related routes
+    // unused as of yet, but here's where they go
 
 
 
@@ -214,9 +215,5 @@ class GroundScoreApi {
 
 }
 
-// for now, put token ("testuser" / "password" on class)
-GroundScoreApi.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ" +
-    "SI6InRlc3R1c2VyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU5ODE1OTI1OX0." +
-    "FtrMwBQwe6Ue-glIFgz_Nf8XxRT2YecFCiSpYL0fCXc";
 
 export default GroundScoreApi;
