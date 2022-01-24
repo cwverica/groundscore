@@ -263,7 +263,7 @@ function Map({
                 }
             }}>
 
-            {savedSearches.length > 0 &&
+            {currentUser &&
                 savedSearches.map((search) => {
                     return (<Marker
                         key={search.id}
