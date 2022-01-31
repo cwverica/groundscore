@@ -55,6 +55,7 @@ router.get("/byuser/:username", ensureCorrectUserOrAdmin, async function (req, r
  * */
 
 router.post("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
+    console.log(req.body);
     try {
         const validator = jsonschema.validate(req.body, searchNewSchema);
         if (!validator.valid) {

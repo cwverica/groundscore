@@ -1,10 +1,12 @@
 
 import Plot from 'react-plotly.js';
-
+import { useEffect, useContext } from 'react';
 import GroundScoreApi from '../api/gs-api';
 import CacheLayer from '../api/cache-layer';
 import calculateDistance from '../common/helpers';
 import StaticModal from "./StaticModal";
+
+import SearchContext from "../context/SearchContext";
 
 import "./Data.css";
 
@@ -12,20 +14,6 @@ import "./Data.css";
 const STARTYEAR = 2016;
 const ENDYEAR = 2020;
 
-const crimeList = [
-    "aggravated-assault",
-    "arson",
-    "burglary",
-    "homicide",
-    "human-trafficing",
-    "larceny",
-    "motor-vehicle-theft",
-    "property-crime",
-    "rape",
-    "rape-legacy",
-    "robbery",
-    "violent-crime"
-];
 
 const crimeDisplayTitles = {
     "aggravated-assault": "Aggravated Assault",
@@ -43,19 +31,27 @@ const crimeDisplayTitles = {
 };
 
 
-function Data({
-    setStatus,
-    status,
-    setCrimeData,
-    crimeData,
-    search,
-    setSearch
-}) {
+function Data({ setCrimeData, crimeData }) {
+
+    const {
+        setStatus,
+        status,
+        search,
+        setSearch,
+        setSelected
+    } = useContext(SearchContext);
+
+    useEffect(() => {
+        return () => {
+            setSelected(null);
+            setStatus("empty");
+        }
+    }, []);
 
     async function loadData(search) {
         let agency, closestOri, locationId;
         let newCrimeData = {};
-        crimeList.forEach((crime) => {
+        Object.keys(crimeDisplayTitles).forEach((crime) => {
             newCrimeData[crime] = {
                 "years": [],
                 "actual": [],
@@ -87,9 +83,9 @@ function Data({
             closestOri = agency.ori;
             locationId = location.id;
         } else {
-            console.log(search);
             agency = await GroundScoreApi.getAgencyByOri(search.closestOri);
-            console.log(agency);
+            closestOri = search.closestOri;
+            locationId = search.locationId;
         }
         const crimes = await CacheLayer.getCrimesByOriAndYears(agency.ori, STARTYEAR, ENDYEAR);
 
@@ -106,7 +102,6 @@ function Data({
                 newCrimeData.errorMessages.push(`Missing dataset has not been supplied by Agency for year ${i}.${<br />}`);
             }
         }
-        // console.log(newCrimeData.errorMessages);
         if (newCrimeData.errorMessages
             && newCrimeData.errorMessages.length === 5) {
             setStatus("no-data");
@@ -156,7 +151,7 @@ function Data({
         }
 
         if (status === "ready") {
-            const crimeGraphs = crimeList.map((crime) => {
+            const crimeGraphs = Object.keys(crimeDisplayTitles).map((crime) => {
                 let data = crimeData[crime];
                 return (
                     <Plot
@@ -297,7 +292,7 @@ function Data({
     }
 
 
-    return <div id="data-container">
+    return <div>
         {createContent()}
     </div>
 }

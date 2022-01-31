@@ -4,7 +4,7 @@
 
 .compass {
     position: absolute;
-    top: 5px;
+    top: 50px;
     right: 5px;
     z-index: 10;
     display: inline-block;
@@ -47,7 +47,7 @@
 .searchBox {
     position: absolute;
     text-align: center;
-    top: 50px;
+    top: 5px;
     right: 5px;
     z-index: 10;
 }

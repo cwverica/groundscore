@@ -1,17 +1,18 @@
 import axios from "axios";
 import React, {
-    useRef,
     useCallback,
     useContext,
     useEffect,
-    useReducer
+    useReducer,
+    useRef,
+    useState
 } from "react";
 import {
     default as compass
 } from '../static/images/navigationcompass.svg';
-// import {
-//     default as magnifyingGlass
-// } from '../static/images/magnifyingglass.svg';
+import {
+    default as magnifyingGlass
+} from '../static/images/magnifyingglass.svg';
 import {
     GoogleMap,
     useLoadScript,
@@ -31,6 +32,7 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 
+import SearchContext from "../context/SearchContext";
 import UserContext from "../context/UserContext";
 import styles from "./mapStyles";
 import "./Map.css";
@@ -40,20 +42,14 @@ const GOOGLE_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 const GOOGLE_BASE = "https://maps.googleapis.com/maps/api/";
 
 const libraries = ["places"];
-const mapContainerStyle = {
-    width: "40vw",
-    height: "95vh"
-};
+
 const center = {
     lat: 38.090000,
     lng: -96.712900
 };
 const options = {
     styles,
-    mapTypeControl: true,
-    mapTypeControlOptions: {
-        mapTypeIds: ["roadmap", "terrain"],
-    },
+    mapTypeControl: false,
     fullscreenControl: false
 };
 
@@ -105,7 +101,7 @@ function SearchBox({
             },
             radius: kilometers200InMeters
         }
-    }); // TODO: update to user lat/lng from browser?
+    });
 
 
 
@@ -178,12 +174,47 @@ function SearchBox({
 };
 
 
-function Map({
-    setStatus,
-    setSearch,
-    setSelected,
-    selected
-}) {
+function Map() {
+
+    let mql = window.matchMedia('(max-width: 680px)').matches;
+    const styleObj = mql ?
+        {
+            width: "100vw",
+            height: "35vh"
+        } : {
+            width: "40vw",
+            height: "95vh"
+        };
+
+    const [mapContainerStyle, setMapContainerStyle] = useState(styleObj);
+
+    useEffect(() => {
+        function handleResize() {
+            let width, height;
+            if (window.matchMedia('(max-width: 680px)').matches) {
+                width = "100vw";
+                height = "35vh";
+            } else {
+                width = "40vw";
+                height = "95vh";
+            }
+
+            setMapContainerStyle({ width, height });
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        return _ => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, []);
+
+    const {
+        setStatus,
+        setSearch,
+        setSelected,
+        selected
+    } = useContext(SearchContext);
 
     const { currentUser, searches } = useContext(UserContext);
     const savedSearches = currentUser ? searches : null;
@@ -271,12 +302,12 @@ function Map({
                             lat: search.lat,
                             lng: search.lng
                         }}
-                        // icon={{
-                        //     url: '../static/images/magnifyingglass.svg',
-                        //     scaledSize: new window.google.maps.Size(12, 12),
-                        //     origin: new window.google.maps.Point(0, 0),
-                        //     anchor: new window.google.maps.Point(6, 6),
-                        // }}
+                        icon={{
+                            url: magnifyingGlass,
+                            scaledSize: new window.google.maps.Size(30, 30),
+                            origin: new window.google.maps.Point(0, 0),
+                            anchor: new window.google.maps.Point(6, 6),
+                        }}
                         onClick={() => { setSelected(search) }}
                     />);
                 })}

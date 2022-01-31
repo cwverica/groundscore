@@ -6,24 +6,27 @@ import Alert from "../common/Alert";
 import GroundScoreApi from '../api/gs-api';
 // import ReactDOM from 'react-dom';
 import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from 'react-bootstrap/Button';
+import fontawesome from '@fortawesome/fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
 
 
 function StaticModal({ currentSearch }) {
     const { currentUser, searches, setSearches } = useContext(UserContext);
-
-
-    function isSearchSaved() {
-        let saved = false;
-        if (currentSearch.id !== "temp" &&
-            searches.some((search) => search.id === currentSearch.id)) saved = true;
-
-        return saved;
-    }
+    let icon;
 
     const [saved, setSaved] = useState(isSearchSaved());
-    // let icon = saved ? "fa-solid fa-bookmark" : "fa-regular fa-bookmark";
+
+
+    fontawesome.library.add(faBookmark);
+    fontawesome.library.add(fas);
+    fontawesome.library.add(far);
+    const toggleIcon = () => {
+        icon = saved ? ["fas", "bookmark"] : ["far", "bookmark"];
+    }
+    toggleIcon();
 
 
     const [show, setShow] = useState(false);
@@ -34,7 +37,10 @@ function StaticModal({ currentSearch }) {
     });
     const [formErrors, setFormErrors] = useState([]);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        setFormErrors([]);
+    }
     const handleShow = () => setShow(true);
     const handleSave = async () => {
         setFormErrors([]);
@@ -50,9 +56,7 @@ function StaticModal({ currentSearch }) {
 
         try {
             await GroundScoreApi.saveSearch(newSearch.username, newSearch);
-            let newSearchList = await GroundScoreApi.getUserSearches(newSearch.username);
             setSaved(true);
-            setSearches(newSearchList);
             setShow(false);
         } catch (e) {
             console.error("Did not save search: ", e)
@@ -60,11 +64,31 @@ function StaticModal({ currentSearch }) {
         }
     }
 
+    function isSearchSaved() {
+        let saved = false;
+        if (currentSearch.id !== "temp" &&
+            searches.some((search) => search.id === currentSearch.id)) {
+            saved = true;
+        }
+        return saved;
+    }
+
     /** Update form data field */
     function handleChange(evt) {
         const { name, value } = evt.target;
         setFormData(data => ({ ...data, [name]: value }));
     }
+
+    useEffect(async () => {
+        try {
+            let newSearchList = await GroundScoreApi.getUserSearches(currentUser.username);
+            setSearches(newSearchList);
+            toggleIcon();
+        } catch (err) {
+            console.log("Oh no, Mr. Bill!");
+            console.log(err);
+        }
+    }, [saved]);
 
     async function toggleUserFavorite() {
         try {
@@ -85,13 +109,12 @@ function StaticModal({ currentSearch }) {
 
     return (
         <>
-            <br />
             <Button
                 variant="warning"
                 onClick={toggleUserFavorite}>
-                Toggle Save Search
+                <FontAwesomeIcon icon={icon} />
             </ Button>
-            {/* <FontAwesomeIcon icon={icon} /> */}
+            <br />
 
 
             <Modal
