@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
+import stareAtMap from "../static/images/cute/stare_at_map.png";
 
 import './Homepage.css';
 
@@ -28,29 +29,22 @@ function Homepage() {
                     : (
                         <p>
                             <Link
-                                className="btn btn-primary font-weight-bold mr-3"
+                                className="btn btn-success font-weight-bold mr-3"
                                 to="/login">
                                 Log in
                             </Link>
                             <Link
-                                className="btn btn-primary font-weight-bold"
+                                className="btn btn-success font-weight-bold"
                                 to="/signup">
                                 Sign up
                             </Link>
                         </p>
                     )}
-                <Link
-                    className="btn btn-primary font-weight-bold mr-3"
-                    to="/search">
-                    Let's search some neighborhoods!
-                </Link>
+                <img className="homepage-detective-image" src={stareAtMap} />
             </div>
             <div className="container">
                 <h3 className="font-weight-bold">
-                    What is&nbsp;
-                    <u>
-                        GroundScore?
-                    </u>
+                    What is GroundScore?
                 </h3>
                 <div className="container text-left">
                     GroundScore is an application to that helps people
@@ -78,7 +72,7 @@ function Homepage() {
                 <Link
                     className="btn btn-primary font-weight-bold mr-3"
                     to="/search">
-                    Give it a whirl...
+                    Try it out now
                 </Link>
             </div>
         </div >

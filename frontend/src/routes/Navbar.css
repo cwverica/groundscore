@@ -1,9 +1,21 @@
 .Navigation {
   height: 75px;
-  background-color: white;
+  background-color: #a94219;
   border-bottom: 2px solid rgba(0, 0, 0, 0.125);
   justify-content: space-between;
   padding: 10px 15px;
+}
+
+.navbar-brand {
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 4px 8px 6px 8px;
+  color: white;
+}
+
+.navbar-brand:hover {
+  background-color: white;
+  color: #a94219;
 }
 
 .nav-link.active {

@@ -41,7 +41,7 @@ function Navbar({ logout }) {
     function loggedOutNav() {
         return (
             <Dropdown drop="start">
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                <Dropdown.Toggle variant="info" id="dropdown-basic">
                     Menu
                 </Dropdown.Toggle>
 

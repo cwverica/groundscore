@@ -7,6 +7,10 @@ import calculateDistance from '../common/helpers';
 import StaticModal from "./StaticModal";
 
 import SearchContext from "../context/SearchContext";
+import UserContext from "../context/UserContext";
+import stareAtMap from "../static/images/cute/stare_at_map.png";
+import crimeScene from "../static/images/cute/crime_scene.png";
+import spying from "../static/images/cute/spying.png";
 
 import "./Data.css";
 
@@ -41,6 +45,8 @@ function Data({ setCrimeData, crimeData }) {
         setSelected
     } = useContext(SearchContext);
 
+    const { currentUser } = useContext(UserContext);
+
     useEffect(() => {
         return () => {
             setSelected(null);
@@ -49,7 +55,7 @@ function Data({ setCrimeData, crimeData }) {
     }, []);
 
     async function loadData(search) {
-        let agency, closestOri, locationId;
+        let agency, closestOri, locationId, crimes;
         let newCrimeData = {};
         Object.keys(crimeDisplayTitles).forEach((crime) => {
             newCrimeData[crime] = {
@@ -60,34 +66,40 @@ function Data({ setCrimeData, crimeData }) {
             };
         });
 
-        if (search.id === "temp") {
-            const location = await CacheLayer.getOrCreateLocation(search);
-            const agencyList = await CacheLayer.getAgenciesByState(location.state);
-            agencyList.sort((agency1, agency2) => {
-                let distance1 = calculateDistance(
-                    agency1.lat,
-                    agency1.lng,
-                    location.lat,
-                    location.lng
-                );
-                let distance2 = calculateDistance(
-                    agency2.lat,
-                    agency2.lng,
-                    location.lat,
-                    location.lng
-                );
 
-                return distance1 - distance2;
-            });
-            agency = agencyList[0];
-            closestOri = agency.ori;
-            locationId = location.id;
-        } else {
-            agency = await GroundScoreApi.getAgencyByOri(search.closestOri);
-            closestOri = search.closestOri;
-            locationId = search.locationId;
+        try {
+            if (search.id === "temp") {
+                const location = await CacheLayer.getOrCreateLocation(search);
+                const agencyList = await CacheLayer.getAgenciesByState(location.state);
+                agencyList.sort((agency1, agency2) => {
+                    let distance1 = calculateDistance(
+                        agency1.lat,
+                        agency1.lng,
+                        location.lat,
+                        location.lng
+                    );
+                    let distance2 = calculateDistance(
+                        agency2.lat,
+                        agency2.lng,
+                        location.lat,
+                        location.lng
+                    );
+
+                    return distance1 - distance2;
+                });
+                agency = agencyList[0];
+                closestOri = agency.ori;
+                locationId = location.id;
+            } else {
+                agency = await GroundScoreApi.getAgencyByOri(search.closestOri);
+                closestOri = search.closestOri;
+                locationId = search.locationId;
+            }
+            crimes = await CacheLayer.getCrimesByOriAndYears(agency.ori, STARTYEAR, ENDYEAR);
+        } catch (err) {
+            console.log(err);
+            setStatus("empty");
         }
-        const crimes = await CacheLayer.getCrimesByOriAndYears(agency.ori, STARTYEAR, ENDYEAR);
 
 
         for (let i = STARTYEAR; i <= ENDYEAR; i++) {
@@ -123,12 +135,15 @@ function Data({ setCrimeData, crimeData }) {
     function createContent() {
         if (status === "empty") {
             return (
-                <h2>
-                    <br />
-                    <br />
-                    Please select a location in the contiguous United States
-                    to get started.
-                </h2>
+                <div>
+                    <h2>
+                        <br />
+                        <br />
+                        Please select a location in the contiguous United States
+                        to get started.
+                    </h2>
+                    <img className="data-detective-image" src={stareAtMap} />
+                </div>
             );
         }
 
@@ -141,6 +156,7 @@ function Data({ setCrimeData, crimeData }) {
                         <br />
                         Please wait. Loading...
                     </h2>
+                    <img className="data-detective-image" src={spying} />
                     <br />
                     <p>
                         This can take up to 30 seconds, as the FBI database
@@ -203,9 +219,11 @@ function Data({ setCrimeData, crimeData }) {
             return (<div>
                 <h1
                 >Crime for {search.city}, {search.state}
-                    <StaticModal
+                    {currentUser ? <StaticModal
                         currentSearch={search}
                     />
+                        :
+                        null}
                 </h1>
                 <div className="notes">
                     A few notes:
@@ -282,6 +300,7 @@ function Data({ setCrimeData, crimeData }) {
                         There is no data available.
                     </h2>
                     <br />
+                    <img className="data-detective-image" src={crimeScene} />
                     <p>
                         Not all agencies report their data consistently enough. It
                         looks like you've found one of those agencies.

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Alert from "../common/Alert";
 
+import './auth.css';
+
 /** Shows Login form.
  * 
  * Calls the login method passed to it.
@@ -40,7 +42,7 @@ function LoginForm({ login }) {
     }
 
     return (
-        <div className="LoginForm">
+        <div className="login-form auth-form">
             <div className="container col-md-6 offset-md-3 col-lg-4 offset-lg-4">
                 <h3 className="mb-3">Log In</h3>
 

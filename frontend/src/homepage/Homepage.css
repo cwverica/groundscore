@@ -9,7 +9,28 @@
   text-align: left;
 }
 
+.homepage-detective-image {
+  width: calc(35vw + 150px);
+}
+
+
   
 .btn {
   margin: 2px 5px;
+}
+
+@media screen and (max-width: 680px){
+
+  .Homepage {
+    flex-direction: column;
+    overflow: scroll;
+  }
+
+  .container {
+    margin: 10px 0px;
+  }
+
+  .homepage-detective-image {
+    width: calc(75px + 45vw);
+  }
 }

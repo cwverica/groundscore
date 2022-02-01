@@ -12,11 +12,17 @@
 }
 
 #data-container {
+    display: flex;
+    padding: 8px;
     order: 2;
     flex-grow: 1;
     z-index: 10;
     overflow-y: auto;
     box-shadow: -4px 20px 20px grey;
+}
+
+.data-detective-image {
+    width: calc(35vw + 150px);
 }
 
 @media screen and (max-width: 680px) {
@@ -28,6 +34,10 @@
 
 #data-container {
     box-shadow: 20px -4px 20px grey;
+}
+
+.data-detective-image {
+    width: calc(30vw + 100px);
 }
 
 }
