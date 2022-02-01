@@ -176,15 +176,21 @@ function SearchBox({
 
 function Map() {
 
-    let mql = window.matchMedia('(max-width: 680px)').matches;
-    const styleObj = mql ?
+    let sm = window.matchMedia('(max-width: 680px)').matches;
+    let lg = window.matchMedia('(min-width: 1675px)').matches;
+    const styleObj = sm ?
         {
             width: "100vw",
             height: "35vh"
-        } : {
-            width: "40vw",
-            height: "95vh"
-        };
+        } : lg ?
+            {
+                width: "calc(200px + 38vw)",
+                height: "95vh",
+            }
+            : {
+                width: "40vw",
+                height: "95vh"
+            };
 
     const [mapContainerStyle, setMapContainerStyle] = useState(styleObj);
 
@@ -194,6 +200,9 @@ function Map() {
             if (window.matchMedia('(max-width: 680px)').matches) {
                 width = "100vw";
                 height = "35vh";
+            } else if (window.matchMedia('(min-width: 1675px)').matches) {
+                width = "calc(200px + 38vw)";
+                height = "95vh";
             } else {
                 width = "40vw";
                 height = "95vh";
