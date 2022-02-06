@@ -106,7 +106,7 @@ function SearchBox({
 
 
     return (
-        <div className="searchBox">
+        <div className="search-box-container">
             <Combobox
                 onSelect={async (address) => {
                     setValue(address, false);
@@ -144,13 +144,19 @@ function SearchBox({
                     }
                 }}>
                 <ComboboxInput
+                    className="search-box"
                     value={value}
                     onChange={(e) => {
                         setValue(e.target.value);
                     }}
                     disabled={!ready}
                     placeholder="Enter an address"
-                    style={{ "textAlign": "center" }}
+                    style={{
+                        "fontSize": "1.3rem",
+                        "textAlign": "center",
+                        "width": "275px",
+                        "height": "37px"
+                    }}
                 />
                 <ComboboxPopover>
                     <ComboboxList>
@@ -336,7 +342,7 @@ function Map() {
                             <button onClick={() => {
                                 setSearch(selected);
                                 setStatus("loading");
-                            }}>{`Return results for ${selected.city || selected.county}, ${selected.state}.`}
+                            }}>{`Search in ${selected.city || selected.county}, ${selected.state}.`}
                             </button>
                         </p>
                     </div>

@@ -3,6 +3,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: stretch;
+    justify-items: stretch;
     max-height: calc(100vh - 75px);
 }
 
@@ -19,6 +20,7 @@
     z-index: 10;
     overflow-y: auto;
     box-shadow: -4px 20px 20px grey;
+    justify-items: stretch;
 }
 
 .data-detective-image {

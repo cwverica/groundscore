@@ -229,56 +229,52 @@ function Data({ setCrimeData, crimeData }) {
                     A few notes:
                     <ul>
                         <li>
-                            <b>
-                                <u>
-                                    Cleared cases
-                                </u>
-                                :&nbsp;
-                            </b>
+                            <strong>
+                                Cleared cases
+                            </strong>
+                            :
                             indicates number of cases that have been solved/closed.
                         </li>
                         <li>
-                            <b>
-                                <u>
-                                    Actual cases
-                                </u>
-                                :&nbsp;
-                            </b>
+                            <strong>
+                                Actual cases
+                            </strong>
+                            :
                             indicates the total number of reported cases.
                         </li>
                         <li>
-                            <u>
+                            <em>
                                 Cleared vs. Actual
-                            </u>
+                            </em>
                             : Comparing these two will give a rough estimate
                             of the effectiveness of the local law enforcement's
                             ability to solve cases.
-                            <i>
+                            <em>
                                 &nbsp;Note:&nbsp;
-                            </i>
+                            </em>
                             this comparison has nothing to do with prevention. The "Actual
                             cases" is the most accurate representation of crime in the area.
                         </li>
                         <li>
-                            <u>
+                            <em>
                                 If a graph seems particularly empty
-                            </u>
+                            </em>
                             : remember that the data is based on reported numbers by
                             local agencies. They may have failed to report accurately.
                         </li>
                         <li>
-                            <u>
+                            <em>
                                 RE: Human trafficing
-                            </u>
+                            </em>
                             : There seems to be almost no reporting for this subject.
                             It's likely that many local agencies are not aware of,
                             nor involved in trafficing cases. This task is usually
                             left to federal agencies.
                         </li>
                         <li>
-                            <u>
+                            <em>
                                 Rape vs. Rape Legacy
-                            </u>
+                            </em>
                             : In 2013, the FBI started collecting rape data under a
                             revised definition and removed “forcible” from the offense
                             name. Legacy refers to crimes catalogued under the old
