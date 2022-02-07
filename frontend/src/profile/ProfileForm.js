@@ -63,10 +63,6 @@ function ProfileForm() {
         setFormErrors([]);
     }
 
-    // Does not pass along unauthorized error message. Maybe a useEffect
-    // useEffect(function formHandler() {
-    //     
-    // }, [formErrors])
 
     return (
         <div className="col-md-6 col-lg-4 offset-md-3 offset-lg-4">

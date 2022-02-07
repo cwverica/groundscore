@@ -34,7 +34,11 @@ const crimeDisplayTitles = {
     "violent-crime": "Violent Crime"
 };
 
-
+/** The main data component:
+ * - calls the Cachelayer to retrieve the data about a given location
+ *    as supplied by the Map component. 
+ * - sorts the crime data 
+ * - creates a graph for each data subset (crime) */
 function Data({ setCrimeData, crimeData }) {
 
     const {
@@ -54,6 +58,7 @@ function Data({ setCrimeData, crimeData }) {
         }
     }, []);
 
+    /** Does the heavy-lifting of retrieving and organizing the data. */
     async function loadData(search) {
         let agency, closestOri, locationId, crimes;
         let newCrimeData = {};
@@ -131,7 +136,8 @@ function Data({ setCrimeData, crimeData }) {
 
     }
 
-
+    /** Does all of the rendering depending on what stage `status` is set to.
+     *    ! should possibly be broken down into smaller components ? */
     function createContent() {
         if (status === "empty") {
             return (
@@ -145,7 +151,7 @@ function Data({ setCrimeData, crimeData }) {
                     <p>
                         Use the search bar to search by address, or click on the map.
                     </p>
-                    <img className="data-detective-image" src={stareAtMap} />
+                    <img className="data-detective-image" alt="" src={stareAtMap} />
                 </div>
             );
         }
@@ -159,7 +165,7 @@ function Data({ setCrimeData, crimeData }) {
                         <br />
                         Please wait. Loading...
                     </h2>
-                    <img className="data-detective-image" src={spying} />
+                    <img className="data-detective-image" alt="" src={spying} />
                     <br />
                     <p>
                         This can take up to 30 seconds, as the FBI database
@@ -299,7 +305,7 @@ function Data({ setCrimeData, crimeData }) {
                         There is no data available.
                     </h2>
                     <br />
-                    <img className="data-detective-image" src={crimeScene} />
+                    <img className="data-detective-image" alt="" src={crimeScene} />
                     <p>
                         Not all agencies report their data consistently enough. It
                         looks like you've found one of those agencies.
@@ -309,7 +315,7 @@ function Data({ setCrimeData, crimeData }) {
         }
     }
 
-
+    // Actual render method.
     return <div>
         {createContent()}
     </div>

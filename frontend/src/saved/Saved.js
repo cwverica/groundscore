@@ -4,30 +4,16 @@ import Accordion from 'react-bootstrap/Accordion';
 import SearchContext from "../context/SearchContext";
 import UserContext from "../context/UserContext";
 
+
+/** The component that displays all of a users saves searches */
 function SavedSearches() {
 
     const { setSelected, setSearch, setStatus } = useContext(SearchContext);
     const { searches } = useContext(UserContext);
 
-    const testLoc = {
-        id: "temp",
-        closestOri: "DE0020200",
-        lat: 39.4302853,
-        lng: -75.6486525,
-        state: "DE",
-        city: "Townsend",
-        county: "New Castle",
-        title: "Thisisthetest"
-    };
-
-
-    // const testSearch = {
-    //     pathname: "/search",
-    //     state: {
-    //         selected: testLoc
-    //     }
-    // };
-
+    /** This function sets all of the state with the location information and
+     *  sets the proper stage for the data component, right before the search page is loaded.
+     */
     function handleGoTo(location) {
         setSelected(location)
         setSearch(location)

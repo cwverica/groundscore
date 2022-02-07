@@ -5,6 +5,7 @@ import stareAtMap from "../static/images/cute/stare_at_map.png";
 
 import './Homepage.css';
 
+/** Displays the homepage. */
 function Homepage() {
     const { currentUser } = useContext(UserContext);
 
@@ -40,7 +41,7 @@ function Homepage() {
                             </Link>
                         </p>
                     )}
-                <img className="homepage-detective-image" src={stareAtMap} />
+                <img className="homepage-detective-image" alt="" src={stareAtMap} />
             </div>
             <div className="container">
                 <h3 className="font-weight-bold">

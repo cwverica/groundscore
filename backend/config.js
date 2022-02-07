@@ -11,7 +11,7 @@ const PORT = +process.env.PORT || 3001;
 
 const PSQL_STRING = process.env.PSQL_STRING || null;
 
-// Use dev database, testing database, or via env var, production database
+// Use dev database, testing database, or via environment variables, production database
 function getDatabaseUri() {
     if (PSQL_STRING) {
         return (PSQL_STRING + ((process.env.NODE_ENV === "test")

@@ -31,6 +31,7 @@ class CacheLayer {
     }
 
 
+    /** Takes a two letter state abbreviation (i.e. "NY" for New York) */
     static async getAgenciesByState(state) {
         try {
             let agencyList = await GroundScoreApi.getAgenciesByState(state);

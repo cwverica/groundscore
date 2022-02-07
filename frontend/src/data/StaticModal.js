@@ -13,6 +13,9 @@ import { fas, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 
 
+/** This component is for toggling the saved-state of the 
+ * search under the current user */
+
 function StaticModal({ currentSearch }) {
     const { currentUser, searches, setSearches } = useContext(UserContext);
     let icon;
@@ -42,6 +45,8 @@ function StaticModal({ currentSearch }) {
         setFormErrors([]);
     }
     const handleShow = () => setShow(true);
+
+    /** Actually saves the search to the database. */
     const handleSave = async () => {
         setFormErrors([]);
         if (formData.title.length < 2) setFormErrors(["Title must be at least 2 characters"]);
@@ -64,6 +69,7 @@ function StaticModal({ currentSearch }) {
         }
     }
 
+    /** Check to see if the search is already saved by the user */
     function isSearchSaved() {
         let saved = false;
         if (currentSearch.id !== "temp" &&
@@ -90,6 +96,9 @@ function StaticModal({ currentSearch }) {
         }
     }, [saved]);
 
+
+    /** Shows the form for saving the search, or deletes the search from user's
+     *  saved searches. Does not actually save the search in case a user cancels. */
     async function toggleUserFavorite() {
         try {
             if (!saved) {

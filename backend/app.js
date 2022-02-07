@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(morgan("tiny"));
 app.use(authenticateJWT);
 
-// will us differente routes, as such:
+// will use different routes, as such:
 app.use("/auth", authRoutes);
 app.use("/comments", commentRoutes);
 app.use("/crimes", crimeRoutes);

@@ -26,16 +26,6 @@ function App() {
   const [search, setSearch] = useState({});
 
 
-  /** A function used in development to test things, once useless, delete */
-  // function popup(data) {
-  //   if (Object.prototype.toString(data) === "[object Object]") {
-  //     window.alert(`You entered "${Object.keys(data).map((key) => `${key}: ${data[key]}`)}"`);
-  //   } else {
-  //     window.alert(`You entered "${data}"`)
-  //   }
-
-  // }
-
 
   /** Handles Login
    * async with boolean return to check if verified.
@@ -43,7 +33,6 @@ function App() {
   async function login(loginData) {
     try {
       let token = await GroundScoreApi.login(loginData);
-      // do login stuff here
       setToken(token);
       return { success: true };
     } catch (errors) {
@@ -59,15 +48,10 @@ function App() {
   * async with boolean return, await response before proceeding
   */
   async function signup(signupData) {
-    // const { username, password, firstName, lastName, email } = signupData;
     try {
       let token = await GroundScoreApi.signup(signupData);
       setToken(token);
-      // window.alert(`You have signed up with:\n
-      //                 username: ${username}\n
-      //                 name: ${firstName} ${lastName}\n
-      //                 password: ***********\n
-      //                 email: ${email}`);
+
       return { success: true };
     } catch (errors) {
       console.error("Signup failed:", errors);

@@ -7,6 +7,8 @@ import './Navbar.css';
 /**  Navigation bar that shows up on every page.
  * 
  *  Rendered by App.js so it's highest possible level.
+ * 
+ *  Renders a different dropdown for when a user is/isn't logged in.
 */
 
 function Navbar({ logout }) {

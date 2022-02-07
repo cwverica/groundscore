@@ -54,7 +54,8 @@ const options = {
 };
 
 
-
+/** A little compass component that sets the map to the users 
+ * current location (if geolocation is allowed). */
 function Locate({
     panTo
 }) {
@@ -81,6 +82,9 @@ function Locate({
 };
 
 
+/** The text search box, complete with autocompleted-suggestions, linked to 
+ * the map. Will set the selected location from the dropdown to the `selected`
+ *  location in the map component */
 function SearchBox({
     panTo,
     setSelected
@@ -179,7 +183,12 @@ function SearchBox({
     )
 };
 
-
+/** The main map component. 
+ * - Displays the map 
+ * - uses the user's saved searches to set markers on the map.
+ * - sets all the location data in state, and triggers the Data
+ *     when user has made a selection. 
+ */
 function Map() {
 
     let sm = window.matchMedia('(max-width: 680px)').matches;

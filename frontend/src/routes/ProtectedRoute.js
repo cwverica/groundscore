@@ -18,9 +18,6 @@ function ProtectedRoute({ exact, path, children }) {
 
     return (
         <Outlet />
-        // <Route exact={exact} path={path}>
-        //     {children}
-        // </Route>
     );
 }
 
