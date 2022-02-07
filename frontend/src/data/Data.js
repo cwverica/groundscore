@@ -142,6 +142,9 @@ function Data({ setCrimeData, crimeData }) {
                         Please select a location in the contiguous United States
                         to get started.
                     </h2>
+                    <p>
+                        Use the search bar to search by address, or click on the map.
+                    </p>
                     <img className="data-detective-image" src={stareAtMap} />
                 </div>
             );

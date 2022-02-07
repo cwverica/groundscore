@@ -55,7 +55,7 @@ CREATE TABLE Reporting_Agencies (
 
 CREATE TABLE Crimes (
   ori CHAR(9) NOT NULL
-    REFERENCES Reporting_Agencies,
+    REFERENCES Reporting_Agencies ON DELETE CASCADE,
   record_year INTEGER NOT NULL,
   offense TEXT NOT NULL,
   actual_cases INTEGER NOT NULL,
@@ -66,11 +66,11 @@ CREATE TABLE Crimes (
 CREATE TABLE Saved_Searches (
   id SERIAL PRIMARY KEY,
   username VARCHAR
-    REFERENCES Users,
+    REFERENCES Users ON DELETE CASCADE,
   location_id INTEGER
-    REFERENCES Locations,
+    REFERENCES Locations ON DELETE CASCADE,
   closest_ori TEXT
-    REFERENCES Reporting_Agencies,
+    REFERENCES Reporting_Agencies ON DELETE CASCADE,
   created_at timestamp DEFAULT current_timestamp,
   title TEXT,
   user_comments TEXT

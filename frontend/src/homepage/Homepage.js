@@ -64,7 +64,7 @@ function Homepage() {
                     How safe is your neighborhood? Take GroundScore for a spin.
                     Start off by clicking the compass in the upper right corner
                     of the map to search around your current neighborhood. Then,
-                    look around to see how other areas of the country look...
+                    look around to see how other areas of the country stack up...
                     <br />
                     <br />
                 </div>
