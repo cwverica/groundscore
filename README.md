@@ -14,7 +14,7 @@ It may be useful for:
    
 It uses the [FBI's Crime aggregate API](https://api.usa.gov/crime/fbi/sapi/) to pull data for the related crime in the area.
 
-It uses [Google Maps' API](https://maps.googleapis.com/maps/api) for Geocoding and Reverse Geocoding (converting addresses to Lattitude and Longitude coordinates, and vis-a-versa)
+It uses [Google Maps' API](https://maps.googleapis.com/maps/api "All hail the googz") for Geocoding and Reverse Geocoding (converting addresses to Lattitude and Longitude coordinates, and vis-a-versa)
 
 
 There is a back-end Postgres database to cache searches (for faster recall) as well as to create users, save searches, and a section for creating posts/leaving comments.[^1]
@@ -54,9 +54,9 @@ This repository is essentially comprised to two different apps working as one: T
 
 ### *Backend*
 
-1. Install the backend by navigating to the `backend` folder and executing:   
+1. Install the backend by navigating to the `backend` folder and executing:
     > `npm install`    
-2. While you are in this folder, seed your databased with the `groundscore.sql` file   
+2. While you are in this folder, seed your database with the `groundscore.sql` file
     > `psql` (or whatever command you use to enter postgres)   
     > `\i groundscore.sql`  
 
@@ -64,10 +64,13 @@ This repository is essentially comprised to two different apps working as one: T
 3. Set up your postgresql connection string.   
     For a locally hosted environment:   
     > `PSQL_STRING = "postgres://username:password@localhost:port/"`   
+    
+    Where `username` is your username, `password` is your password, and `port` is the port postgresql is running on (likely: 5432)
 
     (Check with your hosting platform for their requirements for a connection string.   )
 
 <br />
+
 ### *Frontend*
 
 1. Install the frontend by navigating to the `frontend` folder and executing:   
@@ -86,13 +89,13 @@ At this point the project is installed. Yaay! Now it's time to run the applicati
 
 If you are running this locally, you should have two open terminals: one with PWD in frontend, and one with PWD in backend.   
 1. Enter `npm start` in the backend.   
-    - Your local api should start.   
-    - If you make any changes to the backend, you will have to kill the server (`ctrl + c`) and start it again.   
+    - Your local api should start on a server.   
+    - If you make any changes to the backend, you will have to manually kill the server (<kbd>ctrl</kbd> + <kbd>c</kbd>) and start it again.   
 2. Enter `npm start` in the frontend.  
     - This may take a minute, but your default browser should open a tab to the app.  
     - If it does not, or gets closed while the server is running, you may find it here: [localhost:3000](http://localhost:3000/). 
-    - If you make any changes to the frontend, hitting save will cause an update in the server. 
-    - If the server crashes because of a error in the code, sometimes you must kill the server (`ctrl + c`) and restart it
+    - If you make any changes to the frontend, saving will cause an update in the server. 
+    - If the server crashes because of a error in the code, sometimes you must kill the server manually (<kbd>ctrl</kbd> + <kbd>c</kbd>) and restart it.
 
 ---
 
@@ -102,9 +105,11 @@ If you are running this locally, you should have two open terminals: one with PW
 
 2. Ability for user to set the year range for the crime data search.
 
-3. Crime per capita: incorporating population into the data, which will give a more relative picture.
+3. Incorporating population into the data, which will give a more relative picture (crime per capita).
 
 4. Being able to select multiple locations, and do side-by-side comparisons of their data (crime per capita would be most useful here).
+
+That which might take the project well beyond it's initial scope:
 
 5. Incorporating public services data: proximity to hospitals, schools, parks, etc.
 
